@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motémail • Éducation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ===== RESET & VARIABLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-tertiary: #64748b;
+            --border-light: #e2e8f0;
+            --card-bg: #ffffff;
+            --hover-bg: #f1f5f9;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+            
+            --radius: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #94a3b8;
+            --border-light: #334155;
+            --card-bg: #1e293b;
+            --hover-bg: #334155;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.2s;
+        }
+
+        /* ===== THEME TOGGLE ===== */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 2px solid var(--border-light);
+            cursor: pointer;
+            z-index: 9999;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(180deg);
+            border-color: var(--primary);
+        }
+
+        /* ===== LANDING PAGE ===== */
+        .landing-page {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .landing-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(12px);
+            padding: 1rem 2rem;
+            border-radius: var(--radius-2xl);
+            margin-bottom: 4rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .discord-link {
+            background: #5865f2;
+            padding: 0.5rem 1.5rem;
+            border-radius: var(--radius-2xl);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            color: white;
+            margin-bottom: 5rem;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.1);
+            padding: 0.5rem 1.5rem;
+            border-radius: var(--radius-2xl);
+            margin-bottom: 2rem;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #fff, #a5f3fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 5rem;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-2xl);
+            padding: 2rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-light);
+            transition: all 0.3s;
+        }
+
+        .login-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-card h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-card p {
+            color: var(--text-tertiary);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-list div {
+            margin: 0.5rem 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-list i {
+            color: var(--success);
+        }
+
+        .card-btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: var(--radius);
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .features-section {
+            margin-bottom: 5rem;
+        }
+
+        .section-title {
+            text-align: center;
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .feature-item {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: var(--radius-2xl);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .landing-footer {
+            text-align: center;
+            color: white;
+            padding: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* ===== MODALS ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: var(--radius-2xl);
+            width: 90%;
+            max-width: 450px;
+            padding: 2.5rem;
+            position: relative;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-light);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-tertiary);
+        }
+
+        .modal-icon {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-content h2 {
+            text-align: center;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-subtitle {
+            text-align: center;
+            color: var(--text-tertiary);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .modal-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* ===== APPLICATION ===== */
+        .app {
+            display: none;
+            min-height: 100vh;
+            background: var(--bg-secondary);
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 280px;
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-light);
+            padding: 2rem 1.5rem;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.875rem 1rem;
+            border: none;
+            background: transparent;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .nav-item i {
+            width: 24px;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 0.875rem;
+            border: 1px solid var(--border-light);
+            background: transparent;
+            border-radius: var(--radius);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2.5rem;
+            border-radius: var(--radius-2xl);
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .quick-actions {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+        }
+
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .quick-action {
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .quick-action:hover {
+            background: var(--hover-bg);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.8rem;
+            color: var(--text-primary);
+        }
+
+        .btn-primary {
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            cursor: pointer;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border-light);
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .btn-icon:hover {
+            background: var(--hover-bg);
+            color: var(--primary);
+        }
+
+        /* ===== AGENDA ===== */
+        .calendar-grid {
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+
+        .calendar-header {
+            display: grid;
+            grid-template-columns: 80px repeat(7, 1fr);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .calendar-header .time-label,
+        .calendar-header .day-header {
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .calendar-row {
+            display: grid;
+            grid-template-columns: 80px repeat(7, 1fr);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .calendar-row:last-child {
+            border-bottom: none;
+        }
+
+        .time-label {
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            color: var(--text-tertiary);
+            font-weight: 500;
+            text-align: center;
+            border-right: 1px solid var(--border-light);
+        }
+
+        .calendar-cell {
+            min-height: 80px;
+            padding: 0.5rem;
+            border-right: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .calendar-cell:last-child {
+            border-right: none;
+        }
+
+        .calendar-cell:hover {
+            background: var(--hover-bg);
+        }
+
+        .calendar-cell.event {
+            background: var(--bg-secondary);
+            border-radius: 4px;
+        }
+
+        /* ===== TÂCHES ===== */
+        .tasks-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .task-column {
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            padding: 1.5rem;
+        }
+
+        .task-column h3 {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .task-list {
+            min-height: 200px;
+        }
+
+        .task-item {
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            margin-bottom: 0.5rem;
+            border-left: 3px solid transparent;
+            cursor: move;
+            transition: all 0.2s;
+        }
+
+        .task-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow);
+        }
+
+        .task-item.todo {
+            border-left-color: var(--warning);
+        }
+
+        .task-item.in-progress {
+            border-left-color: var(--primary);
+        }
+
+        .task-item.done {
+            border-left-color: var(--success);
+        }
+
+        /* ===== SUPER ADMIN ===== */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .kpi-icon {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .kpi-value {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .admin-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-card h3 {
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .form-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.875rem;
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .form-select {
+            padding: 0.875rem;
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .domains-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .domains-table th {
+            text-align: left;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .domains-table td {
+            padding: 1rem;
+            border-top: 1px solid var(--border-light);
+            color: var(--text-primary);
+        }
+
+        /* ===== QUOTA ===== */
+        .quota-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            margin-bottom: 2rem;
+        }
+
+        .quota-bar {
+            height: 10px;
+            background: var(--bg-tertiary);
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .quota-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+
+        /* ===== NOTIFICATION ===== */
+        .notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 2rem;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 20000;
+            border-left: 4px solid var(--primary);
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification.success {
+            background: var(--success);
+            color: white;
+        }
+
+        .notification.error {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .cards-grid,
+            .features-grid,
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .cards-grid,
+            .features-grid,
+            .kpi-grid,
+            .stats-grid,
+            .quick-actions-grid,
+            .tasks-board {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-moon"></i>
+        <i class="fas fa-sun" style="display: none;"></i>
+    </button>
+
+    <!-- LANDING PAGE -->
+    <div class="landing-page" id="landingPage">
+        <nav class="landing-nav">
+            <div class="nav-logo">
+                <i class="fas fa-graduation-cap"></i>
+                Motémail
+            </div>
+            <div class="nav-links">
+                <a href="#features">Fonctionnalités</a>
+                <a href="#about">À propos</a>
+                <a href="https://discord.gg/dgeZUyTmUC" target="_blank" class="discord-link">
+                    <i class="fab fa-discord"></i> Discord
+                </a>
+            </div>
+        </nav>
+
+        <div class="hero-section">
+            <div class="hero-badge">✨ Plateforme éducative officielle</div>
+            <h1 class="hero-title">
+                Email Personnalisé
+                <span class="gradient-text">+ Agenda Intelligent</span>
+            </h1>
+            <p class="hero-description">
+                La première plateforme qui combine messagerie personnalisée 
+                et organisation scolaire pour les établissements éducatifs
+            </p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalUsers">0</span>
+                    <span class="stat-label">utilisateurs</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="totalEmails">0</span>
+                    <span class="stat-label">emails</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="totalEvents">0</span>
+                    <span class="stat-label">événements</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="cards-grid">
+            <div class="login-card" onclick="showModal('guest')">
+                <div class="card-icon">👤</div>
+                <h3>Mode Invité</h3>
+                <p>Testez la plateforme sans compte</p>
+                <div class="feature-list">
+                    <div><i class="fas fa-check-circle"></i> Recevoir des emails</div>
+                    <div><i class="fas fa-check-circle"></i> Agenda démo</div>
+                    <div><i class="fas fa-check-circle"></i> Aucune inscription</div>
+                </div>
+                <button class="card-btn">Explorer →</button>
+            </div>
+            <div class="login-card" onclick="showModal('beneficiary')">
+                <div class="card-icon">📬</div>
+                <h3>Bénéficiaire</h3>
+                <p>Étudiant ou personnel</p>
+                <div class="feature-list">
+                    <div><i class="fas fa-check-circle"></i> Adresse @etablissement</div>
+                    <div><i class="fas fa-check-circle"></i> Messagerie complète</div>
+                    <div><i class="fas fa-check-circle"></i> Agenda personnel</div>
+                </div>
+                <button class="card-btn">Accéder →</button>
+            </div>
+            <div class="login-card" onclick="showModal('domain')">
+                <div class="card-icon">🌐</div>
+                <h3>Administrateur</h3>
+                <p>Gérez votre établissement</p>
+                <div class="feature-list">
+                    <div><i class="fas fa-check-circle"></i> Créer des comptes</div>
+                    <div><i class="fas fa-check-circle"></i> Gérer les quotas</div>
+                    <div><i class="fas fa-check-circle"></i> Tableau de bord</div>
+                </div>
+                <button class="card-btn">Gérer →</button>
+            </div>
+            <div class="login-card" onclick="showModal('moteo')">
+                <div class="card-icon">⚡</div>
+                <h3>Admin Motéo</h3>
+                <p>Administration centrale</p>
+                <div class="feature-list">
+                    <div><i class="fas fa-check-circle"></i> Créer des domaines</div>
+                    <div><i class="fas fa-check-circle"></i> Gérer les admins</div>
+                    <div><i class="fas fa-check-circle"></i> Supervision</div>
+                </div>
+                <button class="card-btn">Superviser →</button>
+            </div>
+        </div>
+
+        <div class="features-section">
+            <h2 class="section-title">Une plateforme <span class="gradient-text">tout-en-un</span></h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-envelope-open-text"></i></div>
+                    <h4>Email personnalisé</h4>
+                    <p>Créez des adresses @votre-ecole.fr</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-calendar-alt"></i></div>
+                    <h4>Agenda intelligent</h4>
+                    <p>Gérez cours et événements</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h4>Statistiques</h4>
+                    <p>Suivez l'activité</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h4>Sécurité</h4>
+                    <p>Données protégées</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="landing-footer">
+            <p>By © Motémail • Éducation, créé par Yase et Rocket</p>
+            <p class="version">Version Officielle 2.0 - 2026</p>
+        </footer>
+    </div>
+
+    <!-- MODALS SANS IDENTIFIANTS VISIBLES -->
+    <div class="modal" id="modal-guest">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('guest')">✕</button>
+            <div class="modal-icon">👤</div>
+            <h2>Mode Invité</h2>
+            <p class="modal-subtitle">Testez la plateforme librement</p>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="guestEmail" placeholder="votre@email.com">
+            </div>
+            <button class="modal-btn" onclick="handleGuestLogin()">Commencer</button>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-beneficiary">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('beneficiary')">✕</button>
+            <div class="modal-icon">📬</div>
+            <h2>Connexion Bénéficiaire</h2>
+            <p class="modal-subtitle">Connectez-vous à votre espace</p>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="beneficiaryEmail" placeholder="votre@email.com">
+            </div>
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input type="password" id="beneficiaryPassword" placeholder="••••••••">
+            </div>
+            <button class="modal-btn" onclick="handleBeneficiaryLogin()">Se connecter</button>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-domain">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('domain')">✕</button>
+            <div class="modal-icon">🌐</div>
+            <h2>Administration</h2>
+            <p class="modal-subtitle">Gérez votre établissement</p>
+            <div class="form-group">
+                <label>Identifiant</label>
+                <input type="text" id="domainAdminId" placeholder="admin@etablissement.fr">
+            </div>
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input type="password" id="domainAdminPassword" placeholder="••••••••">
+            </div>
+            <button class="modal-btn" onclick="handleDomainLogin()">Se connecter</button>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-moteo">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('moteo')">✕</button>
+            <div class="modal-icon">⚡</div>
+            <h2>Admin Motéo</h2>
+            <p class="modal-subtitle">Accès administrateur</p>
+            <div class="form-group">
+                <label>Identifiant</label>
+                <input type="text" id="moteoAdminId" placeholder="identifiant">
+            </div>
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input type="password" id="moteoAdminPassword" placeholder="••••••••">
+            </div>
+            <button class="modal-btn" onclick="handleMoteoLogin()">Se connecter</button>
+        </div>
+    </div>
+
+    <!-- APPLICATION PRINCIPALE -->
+    <div class="app" id="mainApp">
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-graduation-cap"></i>
+                Motémail
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <span class="user-name" id="userNameDisplay">Chargement...</span>
+                    <span class="user-role" id="userRoleDisplay">Connexion</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-item" onclick="showSection('dashboard')"><i class="fas fa-home"></i> Dashboard</button>
+                <button class="nav-item" onclick="showSection('emails')"><i class="fas fa-envelope"></i> Messagerie</button>
+                <button class="nav-item" onclick="showSection('agenda')"><i class="fas fa-calendar-alt"></i> Agenda</button>
+                <button class="nav-item" onclick="showSection('tasks')"><i class="fas fa-tasks"></i> Tâches</button>
+                <button class="nav-item" onclick="showSection('settings')"><i class="fas fa-cog"></i> Paramètres</button>
+                <button class="nav-item" id="superAdminNav" style="display: none;" onclick="showSection('super-admin')"><i class="fas fa-crown"></i> Supervision</button>
+                <button class="nav-item" id="domainAdminNav" style="display: none;" onclick="showSection('domain-admin')"><i class="fas fa-school"></i> Gestion École</button>
+            </nav>
+            <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+        </div>
+
+        <div class="main-content">
+            <!-- DASHBOARD -->
+            <div id="dashboard-section" class="content-section active">
+                <div class="welcome-card">
+                    <h1>Bonjour, <span id="welcomeName">...</span></h1>
+                    <p id="welcomeMessage">Bienvenue sur votre espace Motémail</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card"><i class="fas fa-envelope stat-icon"></i><div><span class="stat-value" id="statEmails">0</span><span class="stat-label">Emails</span></div></div>
+                    <div class="stat-card"><i class="fas fa-calendar stat-icon"></i><div><span class="stat-value" id="statEvents">0</span><span class="stat-label">Événements</span></div></div>
+                    <div class="stat-card"><i class="fas fa-tasks stat-icon"></i><div><span class="stat-value" id="statTasks">0</span><span class="stat-label">Tâches</span></div></div>
+                </div>
+                <div class="quick-actions">
+                    <h3>Actions rapides</h3>
+                    <div class="quick-actions-grid">
+                        <button class="quick-action" onclick="showCompose()"><i class="fas fa-pen"></i> Nouvel email</button>
+                        <button class="quick-action" onclick="showSection('agenda')"><i class="fas fa-plus"></i> Ajouter un cours</button>
+                        <button class="quick-action" onclick="showSection('tasks')"><i class="fas fa-check"></i> Nouvelle tâche</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MESSAGERIE -->
+            <div id="emails-section" class="content-section">
+                <div class="section-header"><h2>Messagerie</h2><button class="btn-primary" onclick="showCompose()"><i class="fas fa-pen"></i> Nouveau message</button></div>
+                <div class="emails-container" id="emailsList">
+                    <div class="email-item"><div class="email-sender">Support Motémail</div><div class="email-subject">Bienvenue</div><div class="email-preview">Découvrez la plateforme...</div><div class="email-time">Il y a 5 min</div></div>
+                </div>
+            </div>
+
+            <!-- COMPOSITION -->
+            <div id="compose-section" class="content-section">
+                <div class="section-header"><h2>Nouveau message</h2><button class="btn-secondary" onclick="showSection('emails')"><i class="fas fa-arrow-left"></i> Retour</button></div>
+                <div class="compose-card">
+                    <div class="form-group"><label>De</label><input type="text" id="composeFrom" readonly class="readonly-input"></div>
+                    <div class="form-group"><label>À</label><input type="email" id="composeTo" placeholder="destinataire@ecole.fr"></div>
+                    <div class="form-group"><label>Sujet</label><input type="text" id="composeSubject" placeholder="Sujet"></div>
+                    <div class="form-group"><label>Message</label><textarea id="composeBody" rows="8" placeholder="Votre message..."></textarea></div>
+                    <div class="compose-actions"><button class="btn-secondary" onclick="showSection('emails')">Annuler</button><button class="btn-primary" onclick="handleSendEmail()">Envoyer</button></div>
+                </div>
+            </div>
+
+            <!-- AGENDA -->
+            <div id="agenda-section" class="content-section">
+                <div class="section-header">
+                    <h2>Agenda</h2>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn-icon" onclick="previousWeek()"><i class="fas fa-chevron-left"></i></button>
+                        <span id="currentWeekDisplay">Semaine en cours</span>
+                        <button class="btn-icon" onclick="nextWeek()"><i class="fas fa-chevron-right"></i></button>
+                        <button class="btn-primary" onclick="showAddEventModal()"><i class="fas fa-plus"></i> Cours</button>
+                    </div>
+                </div>
+                <div id="weeklyCalendar" class="calendar-grid"></div>
+            </div>
+
+            <!-- TÂCHES -->
+            <div id="tasks-section" class="content-section">
+                <div class="section-header"><h2>Mes tâches</h2><button class="btn-primary" onclick="showAddTaskModal()"><i class="fas fa-plus"></i> Nouvelle tâche</button></div>
+                <div class="tasks-board">
+                    <div class="task-column"><h3>À faire</h3><div class="task-list" id="todoTasks"></div></div>
+                    <div class="task-column"><h3>En cours</h3><div class="task-list" id="inProgressTasks"></div></div>
+                    <div class="task-column"><h3>Terminé</h3><div class="task-list" id="doneTasks"></div></div>
+                </div>
+            </div>
+
+            <!-- PARAMÈTRES -->
+            <div id="settings-section" class="content-section">
+                <div class="section-header"><h2>Paramètres</h2></div>
+                <div class="settings-grid">
+                    <div class="admin-card">
+                        <h3><i class="fas fa-key"></i> Changer mot de passe</h3>
+                        <div class="form-group"><label>Mot de passe actuel</label><input type="password" id="currentPassword" class="form-input"></div>
+                        <div class="form-group"><label>Nouveau mot de passe</label><input type="password" id="newPassword" class="form-input"></div>
+                        <div class="form-group"><label>Confirmer</label><input type="password" id="confirmPassword" class="form-input"></div>
+                        <button class="btn-primary" onclick="changePassword()">Changer</button>
+                    </div>
+                    <div class="admin-card">
+                        <h3><i class="fas fa-user-circle"></i> Mon compte</h3>
+                        <div style="padding:1rem; background:var(--bg-secondary); border-radius:var(--radius);">
+                            <div><strong id="accountName">-</strong></div>
+                            <div style="color:var(--text-tertiary);" id="accountEmail">-</div>
+                            <div><span class="founder-badge" id="accountRole">-</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUPER ADMIN -->
+            <div id="super-admin-section" class="content-section">
+                <div class="section-header"><h2><i class="fas fa-crown" style="color:var(--warning);"></i> Supervision Motéo</h2></div>
+                <div class="kpi-grid">
+                    <div class="kpi-card"><i class="fas fa-globe kpi-icon"></i><div><span class="kpi-value" id="superDomains">0</span><span class="kpi-label">Domaines</span></div></div>
+                    <div class="kpi-card"><i class="fas fa-user-tie kpi-icon"></i><div><span class="kpi-value" id="superAdmins">2</span><span class="kpi-label">Admins</span></div></div>
+                    <div class="kpi-card"><i class="fas fa-users kpi-icon"></i><div><span class="kpi-value" id="superBeneficiaries">0</span><span class="kpi-label">Bénéficiaires</span></div></div>
+                    <div class="kpi-card"><i class="fas fa-envelope kpi-icon"></i><div><span class="kpi-value" id="superEmails">0</span><span class="kpi-label">Emails</span></div></div>
+                </div>
+                <div class="admin-card">
+                    <h3>Créer un domaine</h3>
+                    <div class="form-row"><input type="text" id="newDomainName" placeholder="ex: ecole.fr" class="form-input"><select id="newDomainQuota" class="form-select"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option></select></div>
+                    <div class="form-row"><input type="password" id="newAdminPassword" placeholder="Mot de passe admin" class="form-input"></div>
+                    <div class="form-row"><select id="paymentMethod" class="form-select" onchange="togglePaymentAmount()"><option value="gratuit">Gratuit</option><option value="robux">Robux</option><option value="nitro">Nitro</option></select><input type="number" id="paymentAmount" placeholder="Montant" class="form-input" style="display:none;"></div>
+                    <button class="btn-primary" onclick="createDomain()" style="width:100%;">Créer</button>
+                </div>
+                <div class="admin-card">
+                    <h3>Domaines</h3>
+                    <table class="domains-table"><thead><tr><th>Domaine</th><th>Admin</th><th>Emails</th><th>Paiement</th><th>Date</th><th>Actions</th></tr></thead><tbody id="domainsTable"></tbody></table>
+                </div>
+            </div>
+
+            <!-- ADMIN DOMAINE -->
+            <div id="domain-admin-section" class="content-section">
+                <div class="section-header"><h2><i class="fas fa-school"></i> Gestion École</h2></div>
+                <div class="quota-card"><div class="quota-info"><span>Quota emails</span><strong id="quotaUsed">0</strong>/<span id="quotaMax">10</span></div><div class="quota-bar"><div class="quota-fill" id="quotaFill" style="width:0%"></div></div></div>
+                <div class="admin-card">
+                    <h3>Ajouter un bénéficiaire</h3>
+                    <div class="form-row"><input type="email" id="newBeneficiaryEmail" placeholder="email@etablissement.fr" class="form-input"><input type="text" id="newBeneficiaryName" placeholder="Nom" class="form-input"><button class="btn-primary" onclick="createBeneficiary()">Ajouter</button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // ============================================
+        // DONNÉES (complètement cachées)
+        // ============================================
+        const SUPER_ADMINS = [
+            { id: 'yase@moteo.education', password: 'yase2026', name: 'Yase' },
+            { id: 'rocket@moteo.education', password: 'rocket2026', name: 'Rocket' }
+        ];
+
+        let domains = [
+            {
+                id: 1,
+                name: 'moteo.fr',
+                adminId: 'admin@moteo.fr',
+                adminPassword: 'admin123',
+                adminName: 'Admin Moteo',
+                maxEmails: 10,
+                paymentMethod: 'gratuit',
+                paymentAmount: 0,
+                paymentDate: '2026-03-01',
+                beneficiaries: [
+                    { id: 1, email: 'contact@moteo.fr', password: 'contact123', name: 'Service Contact' },
+                    { id: 2, email: 'support@moteo.fr', password: 'support123', name: 'Support Technique' }
+                ]
+            }
+        ];
+
+        let emails = [
+            { id: 1, from: 'support@moteo.fr', to: 'contact@moteo.fr', subject: 'Bienvenue', body: 'Bienvenue sur Motémail !', date: new Date().toISOString(), read: false }
+        ];
+
+        let events = [
+            { id: 1, title: 'Cours de mathématiques', day: 1, startTime: '09:00', endTime: '11:00', room: 'Salle 101', color: '#3b82f6', description: '' },
+            { id: 2, title: 'Physique-chimie', day: 2, startTime: '14:00', endTime: '16:00', room: 'Labo 3', color: '#8b5cf6', description: '' }
+        ];
+
+        let tasks = [
+            { id: 1, title: 'Rendre DM de maths', dueDate: '2026-03-10', status: 'todo', priority: 'haute' },
+            { id: 2, title: 'Préparer présentation', dueDate: '2026-03-12', status: 'in-progress', priority: 'moyenne' },
+            { id: 3, title: 'Lire chapitre 5', dueDate: '2026-03-08', status: 'done', priority: 'basse' }
+        ];
+
+        let currentUser = null;
+        let currentWeek = 0;
+
+        // ============================================
+        // INITIALISATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.setAttribute('data-theme', savedTheme);
+            const moon = document.querySelector('.fa-moon');
+            const sun = document.querySelector('.fa-sun');
+            if (savedTheme === 'dark') { moon.style.display = 'none'; sun.style.display = 'inline-block'; }
+            updateStats();
+            renderDomainsTable();
+            renderAgenda();
+            renderTasks();
+        });
+
+        function updateStats() {
+            const totalBeneficiaries = domains.reduce((acc, d) => acc + d.beneficiaries.length, 0);
+            document.getElementById('totalUsers').textContent = totalBeneficiaries + SUPER_ADMINS.length;
+            document.getElementById('totalEmails').textContent = emails.length;
+            document.getElementById('totalEvents').textContent = events.length;
+            if (document.getElementById('statEmails')) {
+                document.getElementById('statEmails').textContent = emails.length;
+                document.getElementById('statEvents').textContent = events.length;
+                document.getElementById('statTasks').textContent = tasks.length;
+            }
+        }
+
+        // ============================================
+        // THEME
+        // ============================================
+        function toggleTheme() {
+            const body = document.body;
+            const current = body.getAttribute('data-theme');
+            const newTheme = current === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            const moon = document.querySelector('.fa-moon');
+            const sun = document.querySelector('.fa-sun');
+            if (newTheme === 'dark') { moon.style.display = 'none'; sun.style.display = 'inline-block'; }
+            else { moon.style.display = 'inline-block'; sun.style.display = 'none'; }
+            showNotification(`Thème ${newTheme === 'dark' ? 'sombre' : 'clair'} activé`);
+        }
+
+        // ============================================
+        // MODALS
+        // ============================================
+        function showModal(type) { document.getElementById('modal-' + type).classList.add('active'); }
+        function closeModal(type) { document.getElementById('modal-' + type).classList.remove('active'); }
+
+        // ============================================
+        // NOTIFICATION
+        // ============================================
+        function showNotification(message, type = 'success') {
+            const notif = document.getElementById('notification');
+            notif.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            notif.className = 'notification ' + type + ' show';
+            setTimeout(() => notif.classList.remove('show'), 3500);
+        }
+
+        // ============================================
+        // CONNEXIONS (sans identifiants visibles)
+        // ============================================
+        function handleGuestLogin() {
+            const email = document.getElementById('guestEmail').value;
+            if (!email) { showNotification('Email requis', 'error'); return; }
+            currentUser = { type: 'guest', email: email, name: email.split('@')[0] };
+            closeModal('guest');
+            showMainApp();
+            showNotification('Bienvenue ' + currentUser.name);
+        }
+
+        function handleBeneficiaryLogin() {
+            const email = document.getElementById('beneficiaryEmail').value;
+            const pass = document.getElementById('beneficiaryPassword').value;
+            for (let d of domains) {
+                const b = d.beneficiaries.find(b => b.email === email && b.password === pass);
+                if (b) {
+                    currentUser = { type: 'beneficiary', email: email, name: b.name, domain: d.name, domainId: d.id };
+                    closeModal('beneficiary');
+                    showMainApp();
+                    showNotification('Bienvenue ' + b.name);
+                    return;
+                }
+            }
+            showNotification('Identifiants incorrects', 'error');
+        }
+
+        function handleDomainLogin() {
+            const id = document.getElementById('domainAdminId').value;
+            const pass = document.getElementById('domainAdminPassword').value;
+            const domain = domains.find(d => d.adminId === id && d.adminPassword === pass);
+            if (domain) {
+                currentUser = { type: 'domain_admin', email: id, name: domain.adminName, domain: domain.name, domainId: domain.id, maxEmails: domain.maxEmails, beneficiaries: domain.beneficiaries };
+                closeModal('domain');
+                showMainApp();
+                document.getElementById('domainAdminNav').style.display = 'flex';
+                showSection('domain-admin');
+                renderDomainAdmin();
+                updateAccountInfo();
+                showNotification('Bienvenue Admin ' + domain.name);
+            } else showNotification('Identifiants incorrects', 'error');
+        }
+
+        function handleMoteoLogin() {
+            const id = document.getElementById('moteoAdminId').value;
+            const pass = document.getElementById('moteoAdminPassword').value;
+            const admin = SUPER_ADMINS.find(a => a.id === id && a.password === pass);
+            if (admin) {
+                currentUser = { type: 'super_admin', email: admin.id, name: admin.name };
+                closeModal('moteo');
+                showMainApp();
+                document.getElementById('superAdminNav').style.display = 'flex';
+                showSection('super-admin');
+                renderSuperAdmin();
+                renderDomainsTable();
+                updateAccountInfo();
+                showNotification('Bienvenue Super Admin ' + admin.name);
+            } else showNotification('Identifiants incorrects', 'error');
+        }
+
+        function showMainApp() {
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            document.getElementById('userNameDisplay').textContent = currentUser.name;
+            let role = '';
+            if (currentUser.type === 'guest') role = 'Invité';
+            else if (currentUser.type === 'beneficiary') role = 'Étudiant';
+            else if (currentUser.type === 'domain_admin') role = 'Admin Établissement';
+            else if (currentUser.type === 'super_admin') role = 'Admin Motéo';
+            document.getElementById('userRoleDisplay').textContent = role;
+            document.getElementById('welcomeName').textContent = currentUser.name;
+            if (currentUser.type === 'guest') {
+                document.getElementById('welcomeMessage').textContent = 'Mode invité';
+                showSection('dashboard');
+            }
+        }
+
+        function showSection(section) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section + '-section').classList.add('active');
+            if (section === 'super-admin') { renderSuperAdmin(); renderDomainsTable(); }
+            if (section === 'domain-admin') renderDomainAdmin();
+            if (section === 'agenda') renderAgenda();
+            if (section === 'tasks') renderTasks();
+            if (section === 'settings') updateAccountInfo();
+        }
+
+        // ============================================
+        // EMAILS
+        // ============================================
+        function showCompose() { showSection('compose'); document.getElementById('composeFrom').value = currentUser.email; }
+        function handleSendEmail() {
+            const to = document.getElementById('composeTo').value;
+            if (!to) { showNotification('Destinataire requis', 'error'); return; }
+            emails.unshift({ id: Date.now(), from: currentUser.email, to, subject: document.getElementById('composeSubject').value || '(Pas de sujet)', body: document.getElementById('composeBody').value || '(Message vide)', date: new Date().toISOString(), read: false });
+            showNotification('Email envoyé');
+            showSection('emails');
+        }
+
+        // ============================================
+        // AGENDA
+        // ============================================
+        function getStartOfWeek() {
+            const d = new Date();
+            d.setDate(d.getDate() + currentWeek * 7 - d.getDay() + 1);
+            return d;
+        }
+        function updateWeekDisplay() {
+            const start = getStartOfWeek();
+            const end = new Date(start); end.setDate(end.getDate() + 6);
+            document.getElementById('currentWeekDisplay').textContent = `Semaine du ${start.toLocaleDateString('fr-FR')} au ${end.toLocaleDateString('fr-FR')}`;
+        }
+        function renderAgenda() {
+            const cal = document.getElementById('weeklyCalendar');
+            if (!cal) return;
+            const start = getStartOfWeek();
+            const hours = ['08:00', '09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'];
+            let html = '<div class="calendar-header"><div class="time-label"></div>';
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(start); d.setDate(d.getDate() + i);
+                html += `<div class="day-header">${['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'][i]}<br><small>${d.toLocaleDateString('fr-FR')}</small></div>`;
+            }
+            html += '</div>';
+            hours.forEach(h => {
+                html += '<div class="calendar-row"><div class="time-label">'+h+'</div>';
+                for (let day = 0; day < 7; day++) {
+                    const ev = events.find(e => e.day === day && e.startTime === h);
+                    if (ev) html += `<div class="calendar-cell event" style="background:${ev.color}20; border-left:3px solid ${ev.color};" onclick="viewEvent(${ev.id})"><strong>${ev.title}</strong><br><small>${ev.room}</small></div>`;
+                    else html += `<div class="calendar-cell" onclick="showAddEventModal(${day},'${h}')"></div>`;
+                }
+                html += '</div>';
+            });
+            cal.innerHTML = html;
+            updateWeekDisplay();
+        }
+        function previousWeek() { currentWeek--; renderAgenda(); }
+        function nextWeek() { currentWeek++; renderAgenda(); }
+        function showAddEventModal(day, hour) {
+            if (!currentUser || currentUser.type === 'guest') { showNotification('Connectez-vous pour ajouter', 'error'); return; }
+            const title = prompt('Titre du cours :'); if (!title) return;
+            const room = prompt('Salle :'); if (!room) return;
+            events.push({ id: Date.now(), title, day, startTime: hour, endTime: (parseInt(hour)+1)+':00', room, color: ['#3b82f6','#8b5cf6','#10b981','#f59e0b'][Math.floor(Math.random()*4)], description: '' });
+            renderAgenda();
+            showNotification('Cours ajouté');
+        }
+        function viewEvent(id) {
+            const e = events.find(e => e.id === id);
+            if (!e) return;
+            alert(`📚 ${e.title}\n📍 ${e.room}\n🕐 ${e.startTime} - ${e.endTime}`);
+        }
+
+        // ============================================
+        // TÂCHES
+        // ============================================
+        function renderTasks() {
+            const todo = document.getElementById('todoTasks');
+            const prog = document.getElementById('inProgressTasks');
+            const done = document.getElementById('doneTasks');
+            if (todo) todo.innerHTML = tasks.filter(t => t.status === 'todo').map(t => `<div class="task-item todo" draggable="true" ondragstart="dragTask(event,${t.id})"><strong>${t.title}</strong><br><small>📅 ${new Date(t.dueDate).toLocaleDateString('fr-FR')}</small></div>`).join('');
+            if (prog) prog.innerHTML = tasks.filter(t => t.status === 'in-progress').map(t => `<div class="task-item in-progress" draggable="true" ondragstart="dragTask(event,${t.id})"><strong>${t.title}</strong><br><small>📅 ${new Date(t.dueDate).toLocaleDateString('fr-FR')}</small></div>`).join('');
+            if (done) done.innerHTML = tasks.filter(t => t.status === 'done').map(t => `<div class="task-item done" draggable="true" ondragstart="dragTask(event,${t.id})"><strong>${t.title}</strong><br><small>📅 ${new Date(t.dueDate).toLocaleDateString('fr-FR')}</small></div>`).join('');
+        }
+        function dragTask(e, id) { e.dataTransfer.setData('text/plain', id); }
+        function allowDrop(e) { e.preventDefault(); }
+        function dropTask(e, status) {
+            e.preventDefault();
+            const id = e.dataTransfer.getData('text/plain');
+            const task = tasks.find(t => t.id == id);
+            if (task) { task.status = status; renderTasks(); }
+        }
+        function showAddTaskModal() {
+            if (!currentUser || currentUser.type === 'guest') { showNotification('Connectez-vous', 'error'); return; }
+            const title = prompt('Titre de la tâche :'); if (!title) return;
+            tasks.push({ id: Date.now(), title, dueDate: new Date().toISOString().split('T')[0], status: 'todo', priority: 'moyenne' });
+            renderTasks();
+            showNotification('Tâche ajoutée');
+        }
+
+        // ============================================
+        // SUPER ADMIN
+        // ============================================
+        function renderSuperAdmin() {
+            const totalBeneficiaries = domains.reduce((acc, d) => acc + d.beneficiaries.length, 0);
+            document.getElementById('superDomains').textContent = domains.length;
+            document.getElementById('superAdmins').textContent = SUPER_ADMINS.length;
+            document.getElementById('superBeneficiaries').textContent = totalBeneficiaries;
+            document.getElementById('superEmails').textContent = totalBeneficiaries;
+        }
+        function togglePaymentAmount() {
+            const method = document.getElementById('paymentMethod').value;
+            document.getElementById('paymentAmount').style.display = method === 'gratuit' ? 'none' : 'block';
+        }
+        function createDomain() {
+            const name = document.getElementById('newDomainName').value.trim();
+            const quota = document.getElementById('newDomainQuota').value;
+            const adminPassword = document.getElementById('newAdminPassword').value;
+            const method = document.getElementById('paymentMethod').value;
+            const amount = document.getElementById('paymentAmount').value;
+            if (!name || !adminPassword) { showNotification('Champs requis', 'error'); return; }
+            if (domains.some(d => d.name === name)) { showNotification('Domaine existe déjà', 'error'); return; }
+            domains.push({
+                id: Date.now(),
+                name,
+                adminId: 'admin@' + name,
+                adminPassword,
+                adminName: 'Admin ' + name.split('.')[0],
+                maxEmails: parseInt(quota),
+                paymentMethod: method,
+                paymentAmount: method === 'gratuit' ? 0 : parseInt(amount),
+                paymentDate: new Date().toISOString().split('T')[0],
+                beneficiaries: []
+            });
+            renderDomainsTable();
+            renderSuperAdmin();
+            showNotification('Domaine créé');
+        }
+        function renderDomainsTable() {
+            const tbody = document.getElementById('domainsTable');
+            if (!tbody) return;
+            let html = '';
+            domains.forEach(d => {
+                let badge = '';
+                if (d.paymentMethod === 'gratuit') badge = '<span style="background:#10b98120;color:#10b981;padding:4px 8px;border-radius:20px;">Gratuit</span>';
+                else if (d.paymentMethod === 'robux') badge = `<span style="background:#ef444420;color:#ef4444;padding:4px 8px;border-radius:20px;">${d.paymentAmount} Robux</span>`;
+                else badge = `<span style="background:#5865f220;color:#5865f2;padding:4px 8px;border-radius:20px;">${d.paymentAmount} Nitro</span>`;
+                html += `<tr><td><strong>${d.name}</strong></td><td>${d.adminId}</td><td>${d.beneficiaries.length}/${d.maxEmails}</td><td>${badge}</td><td>${d.paymentDate}</td><td><button class="btn-icon" onclick="alert('Détails du domaine')"><i class="fas fa-eye"></i></button><button class="btn-icon" onclick="editDomain('${d.name}')"><i class="fas fa-edit"></i></button><button class="btn-icon" onclick="deleteDomain('${d.name}')"><i class="fas fa-trash"></i></button></td></tr>`;
+            });
+            tbody.innerHTML = html;
+        }
+        window.editDomain = function(name) {
+            const d = domains.find(d => d.name === name);
+            const q = prompt('Nouveau quota:', d.maxEmails);
+            if (q && !isNaN(q)) { d.maxEmails = parseInt(q); renderDomainsTable(); showNotification('Quota mis à jour'); }
+        }
+        window.deleteDomain = function(name) {
+            if (confirm('Supprimer ?')) { domains = domains.filter(d => d.name !== name); renderDomainsTable(); renderSuperAdmin(); showNotification('Domaine supprimé'); }
+        }
+
+        // ============================================
+        // ADMIN DOMAINE
+        // ============================================
+        function renderDomainAdmin() {
+            if (!currentUser || !currentUser.domainId) return;
+            const d = domains.find(d => d.id === currentUser.domainId);
+            if (!d) return;
+            document.getElementById('quotaUsed').textContent = d.beneficiaries.length;
+            document.getElementById('quotaMax').textContent = d.maxEmails;
+            document.getElementById('quotaFill').style.width = (d.beneficiaries.length / d.maxEmails * 100) + '%';
+        }
+        function createBeneficiary() {
+            const email = document.getElementById('newBeneficiaryEmail').value.trim();
+            const name = document.getElementById('newBeneficiaryName').value.trim();
+            if (!email || !name) { showNotification('Champs requis', 'error'); return; }
+            const d = domains.find(d => d.id === currentUser.domainId);
+            if (d.beneficiaries.length >= d.maxEmails) { showNotification('Quota atteint', 'error'); return; }
+            d.beneficiaries.push({ id: Date.now(), email, password: 'Default123!', name });
+            showNotification('Bénéficiaire ajouté');
+            renderDomainAdmin();
+        }
+
+        // ============================================
+        // PARAMÈTRES
+        // ============================================
+        function updateAccountInfo() {
+            if (!currentUser) return;
+            document.getElementById('accountName').textContent = currentUser.name;
+            document.getElementById('accountEmail').textContent = currentUser.email;
+            let role = '';
+            if (currentUser.type === 'guest') role = 'Invité';
+            else if (currentUser.type === 'beneficiary') role = 'Étudiant';
+            else if (currentUser.type === 'domain_admin') role = 'Admin Établissement';
+            else if (currentUser.type === 'super_admin') role = 'Admin Motéo';
+            document.getElementById('accountRole').textContent = role;
+        }
+        function changePassword() { showNotification('Fonctionnalité à venir', 'info'); }
+
+        // ============================================
+        // DÉCONNEXION
+        // ============================================
+        function logout() {
+            currentUser = null;
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('landingPage').style.display = 'block';
+            document.getElementById('superAdminNav').style.display = 'none';
+            document.getElementById('domainAdminNav').style.display = 'none';
+            showNotification('Déconnexion réussie');
+        }
+
+        // Raccourcis clavier basiques
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            if (e.key === 'Escape') document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+        });
+    </script>
+</body>
+</html>
