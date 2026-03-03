@@ -1216,16 +1216,16 @@
             <div id="tasks-section" class="content-section">
                 <div class="section-header"><h2>Mes tâches</h2><button class="btn-primary" onclick="showAddTaskModal()"><i class="fas fa-plus"></i> Nouvelle tâche</button></div>
                 <div class="tasks-board">
-                    <div class="task-column"><h3>À faire</h3><div class="task-list" id="todoTasks"></div></div>
-                    <div class="task-column"><h3>En cours</h3><div class="task-list" id="inProgressTasks"></div></div>
-                    <div class="task-column"><h3>Terminé</h3><div class="task-list" id="doneTasks"></div></div>
+                    <div class="task-column"><h3>À faire</h3><div class="task-list" id="todoTasks" ondragover="allowDrop(event)" ondrop="dropTask(event, 'todo')"></div></div>
+                    <div class="task-column"><h3>En cours</h3><div class="task-list" id="inProgressTasks" ondragover="allowDrop(event)" ondrop="dropTask(event, 'in-progress')"></div></div>
+                    <div class="task-column"><h3>Terminé</h3><div class="task-list" id="doneTasks" ondragover="allowDrop(event)" ondrop="dropTask(event, 'done')"></div></div>
                 </div>
             </div>
 
             <!-- PARAMÈTRES -->
             <div id="settings-section" class="content-section">
                 <div class="section-header"><h2>Paramètres</h2></div>
-                <div class="settings-grid">
+                <div class="settings-grid" style="display: grid; gap: 1.5rem;">
                     <div class="admin-card">
                         <h3><i class="fas fa-key"></i> Changer mot de passe</h3>
                         <div class="form-group"><label>Mot de passe actuel</label><input type="password" id="currentPassword" class="form-input"></div>
@@ -1255,7 +1255,7 @@
                 </div>
                 <div class="admin-card">
                     <h3>Créer un domaine</h3>
-                    <div class="form-row"><input type="text" id="newDomainName" placeholder="ex: ecole.fr" class="form-input"><select id="newDomainQuota" class="form-select"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option></select></div>
+                    <div class="form-row"><input type="text" id="newDomainName" placeholder="ex: ecole.fr" class="form-input"><select id="newDomainQuota" class="form-select"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option><option value="50">50</option></select></div>
                     <div class="form-row"><input type="password" id="newAdminPassword" placeholder="Mot de passe admin" class="form-input"></div>
                     <div class="form-row"><select id="paymentMethod" class="form-select" onchange="togglePaymentAmount()"><option value="gratuit">Gratuit</option><option value="robux">Robux</option><option value="nitro">Nitro</option></select><input type="number" id="paymentAmount" placeholder="Montant" class="form-input" style="display:none;"></div>
                     <button class="btn-primary" onclick="createDomain()" style="width:100%;">Créer</button>
@@ -1282,14 +1282,15 @@
 
     <script>
         // ============================================
-        // DONNÉES (complètement cachées)
+        // DONNÉES (chargées depuis localStorage)
         // ============================================
         const SUPER_ADMINS = [
             { id: 'yase@moteo.education', password: 'yase2026', name: 'Yase' },
             { id: 'rocket@moteo.education', password: 'rocket2026', name: 'Rocket' }
         ];
 
-        let domains = [
+        // Données par défaut
+        const defaultDomains = [
             {
                 id: 1,
                 name: 'moteo.fr',
@@ -1307,28 +1308,52 @@
             }
         ];
 
-        let emails = [
+        const defaultEmails = [
             { id: 1, from: 'support@moteo.fr', to: 'contact@moteo.fr', subject: 'Bienvenue', body: 'Bienvenue sur Motémail !', date: new Date().toISOString(), read: false }
         ];
 
-        let events = [
+        const defaultEvents = [
             { id: 1, title: 'Cours de mathématiques', day: 1, startTime: '09:00', endTime: '11:00', room: 'Salle 101', color: '#3b82f6', description: '' },
             { id: 2, title: 'Physique-chimie', day: 2, startTime: '14:00', endTime: '16:00', room: 'Labo 3', color: '#8b5cf6', description: '' }
         ];
 
-        let tasks = [
+        const defaultTasks = [
             { id: 1, title: 'Rendre DM de maths', dueDate: '2026-03-10', status: 'todo', priority: 'haute' },
             { id: 2, title: 'Préparer présentation', dueDate: '2026-03-12', status: 'in-progress', priority: 'moyenne' },
             { id: 3, title: 'Lire chapitre 5', dueDate: '2026-03-08', status: 'done', priority: 'basse' }
         ];
 
+        // Variables globales
+        let domains = [];
+        let emails = [];
+        let events = [];
+        let tasks = [];
+
         let currentUser = null;
         let currentWeek = 0;
+
+        // ============================================
+        // FONCTIONS DE PERSISTANCE
+        // ============================================
+        function saveData() {
+            localStorage.setItem('motemail_domains', JSON.stringify(domains));
+            localStorage.setItem('motemail_emails', JSON.stringify(emails));
+            localStorage.setItem('motemail_events', JSON.stringify(events));
+            localStorage.setItem('motemail_tasks', JSON.stringify(tasks));
+        }
+
+        function loadData() {
+            domains = JSON.parse(localStorage.getItem('motemail_domains')) || defaultDomains;
+            emails = JSON.parse(localStorage.getItem('motemail_emails')) || defaultEmails;
+            events = JSON.parse(localStorage.getItem('motemail_events')) || defaultEvents;
+            tasks = JSON.parse(localStorage.getItem('motemail_tasks')) || defaultTasks;
+        }
 
         // ============================================
         // INITIALISATION
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
+            loadData();
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.body.setAttribute('data-theme', savedTheme);
             const moon = document.querySelector('.fa-moon');
@@ -1340,20 +1365,8 @@
             renderTasks();
         });
 
-        function updateStats() {
-            const totalBeneficiaries = domains.reduce((acc, d) => acc + d.beneficiaries.length, 0);
-            document.getElementById('totalUsers').textContent = totalBeneficiaries + SUPER_ADMINS.length;
-            document.getElementById('totalEmails').textContent = emails.length;
-            document.getElementById('totalEvents').textContent = events.length;
-            if (document.getElementById('statEmails')) {
-                document.getElementById('statEmails').textContent = emails.length;
-                document.getElementById('statEvents').textContent = events.length;
-                document.getElementById('statTasks').textContent = tasks.length;
-            }
-        }
-
         // ============================================
-        // THEME
+        // THÈME
         // ============================================
         function toggleTheme() {
             const body = document.body;
@@ -1385,7 +1398,7 @@
         }
 
         // ============================================
-        // CONNEXIONS (sans identifiants visibles)
+        // CONNEXIONS
         // ============================================
         function handleGuestLogin() {
             const email = document.getElementById('guestEmail').value;
@@ -1473,6 +1486,21 @@
         }
 
         // ============================================
+        // STATS
+        // ============================================
+        function updateStats() {
+            const totalBeneficiaries = domains.reduce((acc, d) => acc + d.beneficiaries.length, 0);
+            document.getElementById('totalUsers').textContent = totalBeneficiaries + SUPER_ADMINS.length;
+            document.getElementById('totalEmails').textContent = emails.length;
+            document.getElementById('totalEvents').textContent = events.length;
+            if (document.getElementById('statEmails')) {
+                document.getElementById('statEmails').textContent = emails.length;
+                document.getElementById('statEvents').textContent = events.length;
+                document.getElementById('statTasks').textContent = tasks.length;
+            }
+        }
+
+        // ============================================
         // EMAILS
         // ============================================
         function showCompose() { showSection('compose'); document.getElementById('composeFrom').value = currentUser.email; }
@@ -1480,6 +1508,7 @@
             const to = document.getElementById('composeTo').value;
             if (!to) { showNotification('Destinataire requis', 'error'); return; }
             emails.unshift({ id: Date.now(), from: currentUser.email, to, subject: document.getElementById('composeSubject').value || '(Pas de sujet)', body: document.getElementById('composeBody').value || '(Message vide)', date: new Date().toISOString(), read: false });
+            saveData();
             showNotification('Email envoyé');
             showSection('emails');
         }
@@ -1527,6 +1556,7 @@
             const title = prompt('Titre du cours :'); if (!title) return;
             const room = prompt('Salle :'); if (!room) return;
             events.push({ id: Date.now(), title, day, startTime: hour, endTime: (parseInt(hour)+1)+':00', room, color: ['#3b82f6','#8b5cf6','#10b981','#f59e0b'][Math.floor(Math.random()*4)], description: '' });
+            saveData();
             renderAgenda();
             showNotification('Cours ajouté');
         }
@@ -1553,12 +1583,13 @@
             e.preventDefault();
             const id = e.dataTransfer.getData('text/plain');
             const task = tasks.find(t => t.id == id);
-            if (task) { task.status = status; renderTasks(); }
+            if (task) { task.status = status; saveData(); renderTasks(); }
         }
         function showAddTaskModal() {
             if (!currentUser || currentUser.type === 'guest') { showNotification('Connectez-vous', 'error'); return; }
             const title = prompt('Titre de la tâche :'); if (!title) return;
             tasks.push({ id: Date.now(), title, dueDate: new Date().toISOString().split('T')[0], status: 'todo', priority: 'moyenne' });
+            saveData();
             renderTasks();
             showNotification('Tâche ajoutée');
         }
@@ -1597,6 +1628,7 @@
                 paymentDate: new Date().toISOString().split('T')[0],
                 beneficiaries: []
             });
+            saveData();
             renderDomainsTable();
             renderSuperAdmin();
             showNotification('Domaine créé');
@@ -1610,17 +1642,22 @@
                 if (d.paymentMethod === 'gratuit') badge = '<span style="background:#10b98120;color:#10b981;padding:4px 8px;border-radius:20px;">Gratuit</span>';
                 else if (d.paymentMethod === 'robux') badge = `<span style="background:#ef444420;color:#ef4444;padding:4px 8px;border-radius:20px;">${d.paymentAmount} Robux</span>`;
                 else badge = `<span style="background:#5865f220;color:#5865f2;padding:4px 8px;border-radius:20px;">${d.paymentAmount} Nitro</span>`;
-                html += `<tr><td><strong>${d.name}</strong></td><td>${d.adminId}</td><td>${d.beneficiaries.length}/${d.maxEmails}</td><td>${badge}</td><td>${d.paymentDate}</td><td><button class="btn-icon" onclick="alert('Détails du domaine')"><i class="fas fa-eye"></i></button><button class="btn-icon" onclick="editDomain('${d.name}')"><i class="fas fa-edit"></i></button><button class="btn-icon" onclick="deleteDomain('${d.name}')"><i class="fas fa-trash"></i></button></td></tr>`;
+                html += `<tr><td><strong>${d.name}</strong></td><td>${d.adminId}</td><td>${d.beneficiaries.length}/${d.maxEmails}</td><td>${badge}</td><td>${d.paymentDate}</td><td><button class="btn-icon" onclick="viewDomainDetails('${d.name}')"><i class="fas fa-eye"></i></button><button class="btn-icon" onclick="editDomain('${d.name}')"><i class="fas fa-edit"></i></button><button class="btn-icon" onclick="deleteDomain('${d.name}')"><i class="fas fa-trash"></i></button></td></tr>`;
             });
             tbody.innerHTML = html;
+        }
+        window.viewDomainDetails = function(name) {
+            const d = domains.find(d => d.name === name);
+            if (!d) return;
+            alert(`Domaine: ${d.name}\nAdmin: ${d.adminId}\nQuota: ${d.beneficiaries.length}/${d.maxEmails}\nPaiement: ${d.paymentMethod} ${d.paymentAmount ? d.paymentAmount : ''}`);
         }
         window.editDomain = function(name) {
             const d = domains.find(d => d.name === name);
             const q = prompt('Nouveau quota:', d.maxEmails);
-            if (q && !isNaN(q)) { d.maxEmails = parseInt(q); renderDomainsTable(); showNotification('Quota mis à jour'); }
+            if (q && !isNaN(q)) { d.maxEmails = parseInt(q); saveData(); renderDomainsTable(); showNotification('Quota mis à jour'); }
         }
         window.deleteDomain = function(name) {
-            if (confirm('Supprimer ?')) { domains = domains.filter(d => d.name !== name); renderDomainsTable(); renderSuperAdmin(); showNotification('Domaine supprimé'); }
+            if (confirm('Supprimer ?')) { domains = domains.filter(d => d.name !== name); saveData(); renderDomainsTable(); renderSuperAdmin(); showNotification('Domaine supprimé'); }
         }
 
         // ============================================
@@ -1641,8 +1678,9 @@
             const d = domains.find(d => d.id === currentUser.domainId);
             if (d.beneficiaries.length >= d.maxEmails) { showNotification('Quota atteint', 'error'); return; }
             d.beneficiaries.push({ id: Date.now(), email, password: 'Default123!', name });
-            showNotification('Bénéficiaire ajouté');
+            saveData();
             renderDomainAdmin();
+            showNotification('Bénéficiaire ajouté');
         }
 
         // ============================================
@@ -1673,7 +1711,7 @@
             showNotification('Déconnexion réussie');
         }
 
-        // Raccourcis clavier basiques
+        // Raccourcis clavier
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
             if (e.key === 'Escape') document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
