@@ -7,13 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* ===== RESET & VARIABLES ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* ===== VARIABLES ===== */
         :root {
             --primary: #3b82f6;
             --primary-dark: #2563eb;
@@ -52,6 +46,13 @@
             --hover-bg: #334155;
         }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -84,6 +85,51 @@
         .theme-toggle:hover {
             transform: rotate(180deg);
             border-color: var(--primary);
+        }
+
+        /* ===== MOBILE MENU ===== */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            font-size: 1.5rem;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+
+        .mobile-menu-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .mobile-menu-btn.active {
+            background: var(--danger);
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1001;
+            backdrop-filter: blur(3px);
+        }
+
+        .sidebar-overlay.active {
+            display: block;
         }
 
         /* ===== LANDING PAGE ===== */
@@ -182,6 +228,11 @@
             font-size: 2.5rem;
             font-weight: 700;
             display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
 
         .cards-grid {
@@ -312,6 +363,8 @@
             position: relative;
             box-shadow: var(--shadow-lg);
             border: 1px solid var(--border-light);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .modal-close {
@@ -325,6 +378,10 @@
             color: var(--text-tertiary);
         }
 
+        .modal-close:hover {
+            color: var(--danger);
+        }
+
         .modal-icon {
             font-size: 3rem;
             text-align: center;
@@ -333,7 +390,7 @@
 
         .modal-content h2 {
             text-align: center;
-            color: var(--text-primary);
+            font-size: 1.5rem;
             margin-bottom: 0.5rem;
         }
 
@@ -350,7 +407,6 @@
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: var(--text-secondary);
             font-weight: 500;
         }
 
@@ -361,6 +417,7 @@
             border-radius: var(--radius);
             background: var(--bg-secondary);
             color: var(--text-primary);
+            font-size: 1rem;
         }
 
         .form-group input:focus {
@@ -402,6 +459,7 @@
             padding: 2rem 1.5rem;
             overflow-y: auto;
             z-index: 100;
+            transition: left 0.3s ease-in-out;
         }
 
         .sidebar-logo {
@@ -444,7 +502,6 @@
         .user-name {
             display: block;
             font-weight: 600;
-            color: var(--text-primary);
         }
 
         .user-role {
@@ -523,6 +580,7 @@
             display: block;
         }
 
+        /* ===== DASHBOARD ===== */
         .welcome-card {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -546,6 +604,7 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            box-shadow: var(--shadow);
         }
 
         .stat-icon {
@@ -557,7 +616,12 @@
             display: block;
             font-size: 2rem;
             font-weight: 700;
-            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
         }
 
         .quick-actions {
@@ -565,13 +629,18 @@
             padding: 1.5rem;
             border-radius: var(--radius-xl);
             border: 1px solid var(--border-light);
+            box-shadow: var(--shadow);
+        }
+
+        .quick-actions h3 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
         }
 
         .quick-actions-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
-            margin-top: 1rem;
         }
 
         .quick-action {
@@ -585,12 +654,19 @@
             align-items: center;
             gap: 0.5rem;
             color: var(--text-primary);
+            transition: all 0.2s;
         }
 
         .quick-action:hover {
             background: var(--hover-bg);
         }
 
+        .quick-action i {
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        /* ===== SECTION HEADER ===== */
         .section-header {
             display: flex;
             justify-content: space-between;
@@ -602,7 +678,6 @@
 
         .section-header h2 {
             font-size: 1.8rem;
-            color: var(--text-primary);
         }
 
         .btn-primary {
@@ -616,6 +691,11 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
         }
 
         .btn-secondary {
@@ -634,7 +714,11 @@
             background: var(--card-bg);
             border-radius: var(--radius);
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             color: var(--text-secondary);
+            transition: all 0.2s;
         }
 
         .btn-icon:hover {
@@ -642,12 +726,75 @@
             color: var(--primary);
         }
 
+        /* ===== EMAILS ===== */
+        .emails-container {
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+
+        .email-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .email-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .email-item:last-child {
+            border-bottom: none;
+        }
+
+        .email-sender {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .email-subject {
+            margin-bottom: 0.25rem;
+        }
+
+        .email-preview {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+        }
+
+        .email-time {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            text-align: right;
+        }
+
+        /* ===== COMPOSE ===== */
+        .compose-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-light);
+        }
+
+        .readonly-input {
+            background: var(--bg-secondary) !important;
+            cursor: not-allowed;
+        }
+
+        .compose-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
         /* ===== AGENDA ===== */
         .calendar-grid {
             background: var(--card-bg);
             border-radius: var(--radius-xl);
             border: 1px solid var(--border-light);
-            overflow: hidden;
+            overflow-x: auto;
         }
 
         .calendar-header {
@@ -655,6 +802,7 @@
             grid-template-columns: 80px repeat(7, 1fr);
             background: var(--bg-secondary);
             border-bottom: 1px solid var(--border-light);
+            min-width: 700px;
         }
 
         .calendar-header .time-label,
@@ -669,6 +817,7 @@
             display: grid;
             grid-template-columns: 80px repeat(7, 1fr);
             border-bottom: 1px solid var(--border-light);
+            min-width: 700px;
         }
 
         .calendar-row:last-child {
@@ -721,8 +870,8 @@
 
         .task-column h3 {
             margin-bottom: 1rem;
-            color: var(--text-secondary);
             font-size: 1rem;
+            color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
@@ -774,6 +923,7 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            box-shadow: var(--shadow);
         }
 
         .kpi-icon {
@@ -785,7 +935,11 @@
             display: block;
             font-size: 2rem;
             font-weight: 700;
-            color: var(--text-primary);
+        }
+
+        .kpi-label {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
         }
 
         .admin-card {
@@ -794,11 +948,14 @@
             border: 1px solid var(--border-light);
             padding: 2rem;
             margin-bottom: 2rem;
+            box-shadow: var(--shadow);
         }
 
         .admin-card h3 {
             margin-bottom: 1.5rem;
-            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .form-row {
@@ -816,6 +973,7 @@
             border-radius: var(--radius);
             background: var(--bg-secondary);
             color: var(--text-primary);
+            font-size: 1rem;
         }
 
         .form-select {
@@ -824,6 +982,7 @@
             border-radius: var(--radius);
             background: var(--bg-secondary);
             color: var(--text-primary);
+            font-size: 1rem;
         }
 
         .domains-table {
@@ -842,7 +1001,6 @@
         .domains-table td {
             padding: 1rem;
             border-top: 1px solid var(--border-light);
-            color: var(--text-primary);
         }
 
         /* ===== LOGS ===== */
@@ -852,15 +1010,15 @@
             background: var(--bg-secondary);
             border-radius: var(--radius);
             padding: 1rem;
-            font-family: monospace;
             font-size: 0.85rem;
         }
 
         .log-entry {
-            padding: 0.75rem;
+            padding: 0.5rem;
             border-bottom: 1px solid var(--border-light);
-            display: flex;
-            gap: 1rem;
+            display: grid;
+            grid-template-columns: 160px 70px 150px 1fr;
+            gap: 0.5rem;
             align-items: center;
         }
 
@@ -870,7 +1028,6 @@
 
         .log-time {
             color: var(--text-tertiary);
-            min-width: 160px;
             font-size: 0.75rem;
         }
 
@@ -879,7 +1036,6 @@
             border-radius: 4px;
             font-size: 0.7rem;
             font-weight: 600;
-            min-width: 70px;
             text-align: center;
         }
 
@@ -904,19 +1060,8 @@
         }
 
         .log-user {
-            color: var(--text-secondary);
-            min-width: 150px;
             font-weight: 500;
-        }
-
-        .log-message {
-            flex: 1;
-            color: var(--text-primary);
-        }
-
-        .log-actions {
-            display: flex;
-            gap: 0.5rem;
+            font-size: 0.8rem;
         }
 
         .log-filter {
@@ -950,12 +1095,17 @@
             margin-bottom: 2rem;
         }
 
+        .quota-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
         .quota-bar {
             height: 10px;
             background: var(--bg-tertiary);
             border-radius: 5px;
             overflow: hidden;
-            margin-top: 0.5rem;
         }
 
         .quota-fill {
@@ -968,8 +1118,8 @@
         /* ===== NOTIFICATION ===== */
         .notification {
             position: fixed;
-            bottom: 2rem;
-            right: 2rem;
+            bottom: 20px;
+            right: 20px;
             padding: 1rem 2rem;
             background: var(--card-bg);
             color: var(--text-primary);
@@ -1004,39 +1154,131 @@
             .kpi-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
+            .log-entry {
+                grid-template-columns: 1fr;
+                gap: 0.25rem;
+            }
         }
 
         @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                position: relative;
+            .mobile-menu-btn {
+                display: flex;
             }
+
+            .sidebar {
+                left: -100%;
+                width: 85%;
+                max-width: 320px;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
             .main-content {
                 margin-left: 0;
+                padding: 1rem;
+                padding-bottom: 80px;
             }
+
             .cards-grid,
             .features-grid,
             .kpi-grid,
             .stats-grid,
-            .quick-actions-grid,
             .tasks-board {
                 grid-template-columns: 1fr;
             }
-            .form-row {
-                flex-direction: column;
+
+            .hero-title {
+                font-size: 2rem;
             }
-            .log-entry {
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: center;
+            }
+
+            .section-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .landing-nav {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.5rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+            }
+        }
+
+        /* ===== UTILS ===== */
+        button, 
+        .login-card, 
+        .nav-item, 
+        .quick-action,
+        .btn-icon,
+        .card-btn {
+            touch-action: manipulation;
+            cursor: pointer;
+        }
+
+        input, select, textarea {
+            font-size: 16px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
         }
     </style>
 </head>
 <body data-theme="light">
-    <button class="theme-toggle" onclick="toggleTheme()">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle">
         <i class="fas fa-moon"></i>
         <i class="fas fa-sun" style="display: none;"></i>
     </button>
+
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- LANDING PAGE -->
     <div class="landing-page" id="landingPage">
@@ -1062,7 +1304,7 @@
             </h1>
             <p class="hero-description">
                 La première plateforme qui combine messagerie personnalisée 
-                et organisation scolaire pour les établissements éducatifs
+                et organisation scolaire
             </p>
             <div class="hero-stats">
                 <div class="stat-item">
@@ -1081,10 +1323,10 @@
         </div>
 
         <div class="cards-grid">
-            <div class="login-card" onclick="showModal('guest')">
+            <div class="login-card" data-modal="guest">
                 <div class="card-icon">👤</div>
                 <h3>Mode Invité</h3>
-                <p>Testez la plateforme sans compte</p>
+                <p>Testez la plateforme</p>
                 <div class="feature-list">
                     <div><i class="fas fa-check-circle"></i> Recevoir des emails</div>
                     <div><i class="fas fa-check-circle"></i> Agenda démo</div>
@@ -1092,7 +1334,7 @@
                 </div>
                 <button class="card-btn">Explorer →</button>
             </div>
-            <div class="login-card" onclick="showModal('beneficiary')">
+            <div class="login-card" data-modal="beneficiary">
                 <div class="card-icon">📬</div>
                 <h3>Bénéficiaire</h3>
                 <p>Étudiant ou personnel</p>
@@ -1103,7 +1345,7 @@
                 </div>
                 <button class="card-btn">Accéder →</button>
             </div>
-            <div class="login-card" onclick="showModal('domain')">
+            <div class="login-card" data-modal="domain">
                 <div class="card-icon">🌐</div>
                 <h3>Administrateur</h3>
                 <p>Gérez votre établissement</p>
@@ -1114,7 +1356,7 @@
                 </div>
                 <button class="card-btn">Gérer →</button>
             </div>
-            <div class="login-card" onclick="showModal('moteo')">
+            <div class="login-card" data-modal="moteo">
                 <div class="card-icon">⚡</div>
                 <h3>Admin Motéo</h3>
                 <p>Administration centrale</p>
@@ -1127,7 +1369,7 @@
             </div>
         </div>
 
-        <div class="features-section">
+        <div class="features-section" id="features">
             <h2 class="section-title">Une plateforme <span class="gradient-text">tout-en-un</span></h2>
             <div class="features-grid">
                 <div class="feature-item">
@@ -1155,14 +1397,14 @@
 
         <footer class="landing-footer">
             <p>By © Motémail • Éducation, créé par Yase et Rocket</p>
-            <p class="version">Version Officielle 4.0 - 2026</p>
+            <p class="version">Version 5.0 - 2026</p>
         </footer>
     </div>
 
-    <!-- MODALS SANS IDENTIFIANTS VISIBLES -->
+    <!-- MODALS -->
     <div class="modal" id="modal-guest">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('guest')">✕</button>
+            <button class="modal-close">✕</button>
             <div class="modal-icon">👤</div>
             <h2>Mode Invité</h2>
             <p class="modal-subtitle">Testez la plateforme librement</p>
@@ -1170,13 +1412,13 @@
                 <label>Email</label>
                 <input type="email" id="guestEmail" placeholder="votre@email.com">
             </div>
-            <button class="modal-btn" onclick="handleGuestLogin()">Commencer</button>
+            <button class="modal-btn" data-login="guest">Commencer</button>
         </div>
     </div>
 
     <div class="modal" id="modal-beneficiary">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('beneficiary')">✕</button>
+            <button class="modal-close">✕</button>
             <div class="modal-icon">📬</div>
             <h2>Connexion Bénéficiaire</h2>
             <p class="modal-subtitle">Connectez-vous à votre espace</p>
@@ -1188,13 +1430,13 @@
                 <label>Mot de passe</label>
                 <input type="password" id="beneficiaryPassword" placeholder="••••••••">
             </div>
-            <button class="modal-btn" onclick="handleBeneficiaryLogin()">Se connecter</button>
+            <button class="modal-btn" data-login="beneficiary">Se connecter</button>
         </div>
     </div>
 
     <div class="modal" id="modal-domain">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('domain')">✕</button>
+            <button class="modal-close">✕</button>
             <div class="modal-icon">🌐</div>
             <h2>Administration</h2>
             <p class="modal-subtitle">Gérez votre établissement</p>
@@ -1206,13 +1448,13 @@
                 <label>Mot de passe</label>
                 <input type="password" id="domainAdminPassword" placeholder="••••••••">
             </div>
-            <button class="modal-btn" onclick="handleDomainLogin()">Se connecter</button>
+            <button class="modal-btn" data-login="domain">Se connecter</button>
         </div>
     </div>
 
     <div class="modal" id="modal-moteo">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('moteo')">✕</button>
+            <button class="modal-close">✕</button>
             <div class="modal-icon">⚡</div>
             <h2>Admin Motéo</h2>
             <p class="modal-subtitle">Accès administrateur</p>
@@ -1224,13 +1466,14 @@
                 <label>Mot de passe</label>
                 <input type="password" id="moteoAdminPassword" placeholder="••••••••">
             </div>
-            <button class="modal-btn" onclick="handleMoteoLogin()">Se connecter</button>
+            <button class="modal-btn" data-login="moteo">Se connecter</button>
         </div>
     </div>
 
     <!-- APPLICATION PRINCIPALE -->
     <div class="app" id="mainApp">
-        <div class="sidebar">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
             <div class="sidebar-logo">
                 <i class="fas fa-graduation-cap"></i>
                 Motémail
@@ -1245,15 +1488,15 @@
                 </div>
             </div>
             <nav class="sidebar-nav">
-                <button class="nav-item" onclick="showSection('dashboard')"><i class="fas fa-home"></i> Dashboard</button>
-                <button class="nav-item" onclick="showSection('emails')"><i class="fas fa-envelope"></i> Messagerie</button>
-                <button class="nav-item" onclick="showSection('agenda')"><i class="fas fa-calendar-alt"></i> Agenda</button>
-                <button class="nav-item" onclick="showSection('tasks')"><i class="fas fa-tasks"></i> Tâches</button>
-                <button class="nav-item" onclick="showSection('settings')"><i class="fas fa-cog"></i> Paramètres</button>
-                <button class="nav-item" id="superAdminNav" style="display: none;" onclick="showSection('super-admin')"><i class="fas fa-crown"></i> Supervision</button>
-                <button class="nav-item" id="domainAdminNav" style="display: none;" onclick="showSection('domain-admin')"><i class="fas fa-school"></i> Gestion École</button>
+                <button class="nav-item" data-section="dashboard"><i class="fas fa-home"></i> Dashboard</button>
+                <button class="nav-item" data-section="emails"><i class="fas fa-envelope"></i> Messagerie</button>
+                <button class="nav-item" data-section="agenda"><i class="fas fa-calendar-alt"></i> Agenda</button>
+                <button class="nav-item" data-section="tasks"><i class="fas fa-tasks"></i> Tâches</button>
+                <button class="nav-item" data-section="settings"><i class="fas fa-cog"></i> Paramètres</button>
+                <button class="nav-item" id="superAdminNav" style="display: none;" data-section="super-admin"><i class="fas fa-crown"></i> Supervision</button>
+                <button class="nav-item" id="domainAdminNav" style="display: none;" data-section="domain-admin"><i class="fas fa-school"></i> Gestion École</button>
             </nav>
-            <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+            <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
         </div>
 
         <div class="main-content">
@@ -1261,7 +1504,7 @@
             <div id="dashboard-section" class="content-section active">
                 <div class="welcome-card">
                     <h1>Bonjour, <span id="welcomeName">...</span></h1>
-                    <p id="welcomeMessage">Bienvenue sur votre espace Motémail</p>
+                    <p id="welcomeMessage">Bienvenue sur votre espace</p>
                 </div>
                 <div class="stats-grid">
                     <div class="stat-card"><i class="fas fa-envelope stat-icon"></i><div><span class="stat-value" id="statEmails">0</span><span class="stat-label">Emails</span></div></div>
@@ -1271,16 +1514,16 @@
                 <div class="quick-actions">
                     <h3>Actions rapides</h3>
                     <div class="quick-actions-grid">
-                        <button class="quick-action" onclick="showCompose()"><i class="fas fa-pen"></i> Nouvel email</button>
-                        <button class="quick-action" onclick="showSection('agenda')"><i class="fas fa-plus"></i> Ajouter un cours</button>
-                        <button class="quick-action" onclick="showSection('tasks')"><i class="fas fa-check"></i> Nouvelle tâche</button>
+                        <button class="quick-action" data-action="compose"><i class="fas fa-pen"></i> Nouvel email</button>
+                        <button class="quick-action" data-section="agenda"><i class="fas fa-plus"></i> Ajouter un cours</button>
+                        <button class="quick-action" data-action="task"><i class="fas fa-check"></i> Nouvelle tâche</button>
                     </div>
                 </div>
             </div>
 
             <!-- MESSAGERIE -->
             <div id="emails-section" class="content-section">
-                <div class="section-header"><h2>Messagerie</h2><button class="btn-primary" onclick="showCompose()"><i class="fas fa-pen"></i> Nouveau message</button></div>
+                <div class="section-header"><h2>Messagerie</h2><button class="btn-primary" data-action="compose"><i class="fas fa-pen"></i> Nouveau message</button></div>
                 <div class="emails-container" id="emailsList">
                     <div class="email-item"><div class="email-sender">Support Motémail</div><div class="email-subject">Bienvenue</div><div class="email-preview">Découvrez la plateforme...</div><div class="email-time">Il y a 5 min</div></div>
                 </div>
@@ -1288,13 +1531,13 @@
 
             <!-- COMPOSITION -->
             <div id="compose-section" class="content-section">
-                <div class="section-header"><h2>Nouveau message</h2><button class="btn-secondary" onclick="showSection('emails')"><i class="fas fa-arrow-left"></i> Retour</button></div>
+                <div class="section-header"><h2>Nouveau message</h2><button class="btn-secondary" data-section="emails"><i class="fas fa-arrow-left"></i> Retour</button></div>
                 <div class="compose-card">
                     <div class="form-group"><label>De</label><input type="text" id="composeFrom" readonly class="readonly-input"></div>
                     <div class="form-group"><label>À</label><input type="email" id="composeTo" placeholder="destinataire@ecole.fr"></div>
                     <div class="form-group"><label>Sujet</label><input type="text" id="composeSubject" placeholder="Sujet"></div>
                     <div class="form-group"><label>Message</label><textarea id="composeBody" rows="8" placeholder="Votre message..."></textarea></div>
-                    <div class="compose-actions"><button class="btn-secondary" onclick="showSection('emails')">Annuler</button><button class="btn-primary" onclick="handleSendEmail()">Envoyer</button></div>
+                    <div class="compose-actions"><button class="btn-secondary" data-section="emails">Annuler</button><button class="btn-primary" id="sendEmailBtn">Envoyer</button></div>
                 </div>
             </div>
 
@@ -1302,11 +1545,11 @@
             <div id="agenda-section" class="content-section">
                 <div class="section-header">
                     <h2>Agenda</h2>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button class="btn-icon" onclick="previousWeek()"><i class="fas fa-chevron-left"></i></button>
-                        <span id="currentWeekDisplay">Semaine en cours</span>
-                        <button class="btn-icon" onclick="nextWeek()"><i class="fas fa-chevron-right"></i></button>
-                        <button class="btn-primary" onclick="showAddEventModal()"><i class="fas fa-plus"></i> Cours</button>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button class="btn-icon" id="prevWeek"><i class="fas fa-chevron-left"></i></button>
+                        <span id="currentWeekDisplay" style="align-self: center;">Semaine</span>
+                        <button class="btn-icon" id="nextWeek"><i class="fas fa-chevron-right"></i></button>
+                        <button class="btn-primary" id="addEventBtn"><i class="fas fa-plus"></i> Cours</button>
                     </div>
                 </div>
                 <div id="weeklyCalendar" class="calendar-grid"></div>
@@ -1314,11 +1557,11 @@
 
             <!-- TÂCHES -->
             <div id="tasks-section" class="content-section">
-                <div class="section-header"><h2>Mes tâches</h2><button class="btn-primary" onclick="showAddTaskModal()"><i class="fas fa-plus"></i> Nouvelle tâche</button></div>
+                <div class="section-header"><h2>Mes tâches</h2><button class="btn-primary" id="addTaskBtn"><i class="fas fa-plus"></i> Nouvelle tâche</button></div>
                 <div class="tasks-board">
-                    <div class="task-column"><h3>À faire</h3><div class="task-list" id="todoTasks" ondragover="allowDrop(event)" ondrop="dropTask(event, 'todo')"></div></div>
-                    <div class="task-column"><h3>En cours</h3><div class="task-list" id="inProgressTasks" ondragover="allowDrop(event)" ondrop="dropTask(event, 'in-progress')"></div></div>
-                    <div class="task-column"><h3>Terminé</h3><div class="task-list" id="doneTasks" ondragover="allowDrop(event)" ondrop="dropTask(event, 'done')"></div></div>
+                    <div class="task-column"><h3>À faire</h3><div class="task-list" id="todoTasks" ondragover="event.preventDefault()" ondrop="App.dropTask(event, 'todo')"></div></div>
+                    <div class="task-column"><h3>En cours</h3><div class="task-list" id="inProgressTasks" ondragover="event.preventDefault()" ondrop="App.dropTask(event, 'in-progress')"></div></div>
+                    <div class="task-column"><h3>Terminé</h3><div class="task-list" id="doneTasks" ondragover="event.preventDefault()" ondrop="App.dropTask(event, 'done')"></div></div>
                 </div>
             </div>
 
@@ -1331,7 +1574,7 @@
                         <div class="form-group"><label>Mot de passe actuel</label><input type="password" id="currentPassword" class="form-input"></div>
                         <div class="form-group"><label>Nouveau mot de passe</label><input type="password" id="newPassword" class="form-input"></div>
                         <div class="form-group"><label>Confirmer</label><input type="password" id="confirmPassword" class="form-input"></div>
-                        <button class="btn-primary" onclick="changePassword()">Changer</button>
+                        <button class="btn-primary" id="changePasswordBtn" style="width:100%;">Changer</button>
                     </div>
                     <div class="admin-card">
                         <h3><i class="fas fa-user-circle"></i> Mon compte</h3>
@@ -1346,7 +1589,7 @@
 
             <!-- SUPER ADMIN -->
             <div id="super-admin-section" class="content-section">
-                <div class="section-header"><h2><i class="fas fa-crown" style="color:var(--warning);"></i> Supervision Motéo</h2></div>
+                <div class="section-header"><h2><i class="fas fa-crown" style="color:var(--warning);"></i> Supervision</h2></div>
                 <div class="kpi-grid">
                     <div class="kpi-card"><i class="fas fa-globe kpi-icon"></i><div><span class="kpi-value" id="superDomains">0</span><span class="kpi-label">Domaines</span></div></div>
                     <div class="kpi-card"><i class="fas fa-user-tie kpi-icon"></i><div><span class="kpi-value" id="superAdmins">2</span><span class="kpi-label">Admins</span></div></div>
@@ -1354,33 +1597,33 @@
                     <div class="kpi-card"><i class="fas fa-envelope kpi-icon"></i><div><span class="kpi-value" id="superEmails">0</span><span class="kpi-label">Emails</span></div></div>
                 </div>
                 
-                <!-- SECTION LOGS -->
+                <!-- LOGS -->
                 <div class="admin-card">
                     <h3><i class="fas fa-history"></i> Journal d'activité</h3>
                     <div class="log-filter">
-                        <button class="active" onclick="filterLogs('all')">Tous</button>
-                        <button onclick="filterLogs('success')">Succès</button>
-                        <button onclick="filterLogs('error')">Erreurs</button>
-                        <button onclick="filterLogs('info')">Infos</button>
-                        <button onclick="filterLogs('warning')">Avertissements</button>
-                        <button onclick="exportLogs()"><i class="fas fa-download"></i> Exporter</button>
-                        <button onclick="clearLogs()"><i class="fas fa-trash"></i> Effacer</button>
+                        <button class="active" data-log-filter="all">Tous</button>
+                        <button data-log-filter="success">Succès</button>
+                        <button data-log-filter="error">Erreurs</button>
+                        <button data-log-filter="info">Infos</button>
+                        <button data-log-filter="warning">Avertissements</button>
+                        <button id="exportLogsBtn"><i class="fas fa-download"></i> Exporter</button>
+                        <button id="clearLogsBtn"><i class="fas fa-trash"></i> Effacer</button>
                     </div>
-                    <div class="logs-container" id="logsContainer">
-                        <!-- Les logs seront injectés ici -->
-                    </div>
+                    <div class="logs-container" id="logsContainer"></div>
                 </div>
 
                 <div class="admin-card">
                     <h3>Créer un domaine</h3>
-                    <div class="form-row"><input type="text" id="newDomainName" placeholder="ex: ecole.fr" class="form-input"><select id="newDomainQuota" class="form-select"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option><option value="50">50</option></select></div>
+                    <div class="form-row"><input type="text" id="newDomainName" placeholder="ecole.fr" class="form-input"><select id="newDomainQuota" class="form-select"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option><option value="50">50</option></select></div>
                     <div class="form-row"><input type="password" id="newAdminPassword" placeholder="Mot de passe admin" class="form-input"></div>
-                    <div class="form-row"><select id="paymentMethod" class="form-select" onchange="togglePaymentAmount()"><option value="gratuit">Gratuit</option><option value="robux">Robux</option><option value="nitro">Nitro</option></select><input type="number" id="paymentAmount" placeholder="Montant" class="form-input" style="display:none;"></div>
-                    <button class="btn-primary" onclick="createDomain()" style="width:100%;">Créer</button>
+                    <div class="form-row"><select id="paymentMethod" class="form-select"><option value="gratuit">Gratuit</option><option value="robux">Robux</option><option value="nitro">Nitro</option></select><input type="number" id="paymentAmount" placeholder="Montant" class="form-input" style="display:none;"></div>
+                    <button class="btn-primary" id="createDomainBtn" style="width:100%;">Créer</button>
                 </div>
                 <div class="admin-card">
                     <h3>Domaines</h3>
-                    <table class="domains-table"><thead><tr><th>Domaine</th><th>Admin</th><th>Emails</th><th>Paiement</th><th>Date</th><th>Actions</th></tr></thead><tbody id="domainsTable"></tbody></table>
+                    <div style="overflow-x: auto;">
+                        <table class="domains-table"><thead><tr><th>Domaine</th><th>Admin</th><th>Emails</th><th>Paiement</th><th>Actions</th></tr></thead><tbody id="domainsTable"></tbody></table>
+                    </div>
                 </div>
             </div>
 
@@ -1390,7 +1633,7 @@
                 <div class="quota-card"><div class="quota-info"><span>Quota emails</span><strong id="quotaUsed">0</strong>/<span id="quotaMax">10</span></div><div class="quota-bar"><div class="quota-fill" id="quotaFill" style="width:0%"></div></div></div>
                 <div class="admin-card">
                     <h3>Ajouter un bénéficiaire</h3>
-                    <div class="form-row"><input type="email" id="newBeneficiaryEmail" placeholder="email@etablissement.fr" class="form-input"><input type="text" id="newBeneficiaryName" placeholder="Nom" class="form-input"><button class="btn-primary" onclick="createBeneficiary()">Ajouter</button></div>
+                    <div class="form-row"><input type="email" id="newBeneficiaryEmail" placeholder="email@ecole.fr" class="form-input"><input type="text" id="newBeneficiaryName" placeholder="Nom" class="form-input"><button class="btn-primary" id="createBeneficiaryBtn">Ajouter</button></div>
                 </div>
             </div>
         </div>
@@ -1399,17 +1642,18 @@
     <div id="notification" class="notification"></div>
 
     <script>
-        // ============================================
-        // DONNÉES (chargées depuis localStorage)
-        // ============================================
-        const SUPER_ADMINS = [
-            { id: 'yase@moteo.education', password: 'yase2026', name: 'Yase' },
-            { id: 'rocket@moteo.education', password: 'rocket2026', name: 'Rocket' }
-        ];
+        (function() {
+            'use strict';
 
-        // Données par défaut
-        const defaultDomains = [
-            {
+            // ============================================
+            // DONNÉES
+            // ============================================
+            const SUPER_ADMINS = [
+                { id: 'yase@moteo.education', password: 'yase2026', name: 'Yase' },
+                { id: 'rocket@moteo.education', password: 'rocket2026', name: 'Rocket' }
+            ];
+
+            const defaultDomains = [{
                 id: 1,
                 name: 'moteo.fr',
                 adminId: 'admin@moteo.fr',
@@ -1423,592 +1667,880 @@
                     { id: 1, email: 'contact@moteo.fr', password: 'contact123', name: 'Service Contact' },
                     { id: 2, email: 'support@moteo.fr', password: 'support123', name: 'Support Technique' }
                 ]
-            }
-        ];
+            }];
 
-        const defaultEmails = [
-            { id: 1, from: 'support@moteo.fr', to: 'contact@moteo.fr', subject: 'Bienvenue', body: 'Bienvenue sur Motémail !', date: new Date().toISOString(), read: false }
-        ];
+            const defaultEmails = [{
+                id: 1,
+                from: 'support@moteo.fr',
+                to: 'contact@moteo.fr',
+                subject: 'Bienvenue',
+                body: 'Bienvenue sur Motémail !',
+                date: new Date().toISOString(),
+                read: false
+            }];
 
-        const defaultEvents = [
-            { id: 1, title: 'Cours de mathématiques', day: 1, startTime: '09:00', endTime: '11:00', room: 'Salle 101', color: '#3b82f6', description: '' },
-            { id: 2, title: 'Physique-chimie', day: 2, startTime: '14:00', endTime: '16:00', room: 'Labo 3', color: '#8b5cf6', description: '' }
-        ];
+            const defaultEvents = [
+                { id: 1, title: 'Cours de mathématiques', day: 1, startTime: '09:00', endTime: '11:00', room: 'Salle 101', color: '#3b82f6', description: '' },
+                { id: 2, title: 'Physique-chimie', day: 2, startTime: '14:00', endTime: '16:00', room: 'Labo 3', color: '#8b5cf6', description: '' }
+            ];
 
-        const defaultTasks = [
-            { id: 1, title: 'Rendre DM de maths', dueDate: '2026-03-10', status: 'todo', priority: 'haute' },
-            { id: 2, title: 'Préparer présentation', dueDate: '2026-03-12', status: 'in-progress', priority: 'moyenne' },
-            { id: 3, title: 'Lire chapitre 5', dueDate: '2026-03-08', status: 'done', priority: 'basse' }
-        ];
+            const defaultTasks = [
+                { id: 1, title: 'Rendre DM de maths', dueDate: '2026-03-10', status: 'todo', priority: 'haute' },
+                { id: 2, title: 'Préparer présentation', dueDate: '2026-03-12', status: 'in-progress', priority: 'moyenne' },
+                { id: 3, title: 'Lire chapitre 5', dueDate: '2026-03-08', status: 'done', priority: 'basse' }
+            ];
 
-        // LOGS
-        let systemLogs = JSON.parse(localStorage.getItem('motemail_logs')) || [];
-
-        // Variables globales
-        let domains = [];
-        let emails = [];
-        let events = [];
-        let tasks = [];
-
-        let currentUser = null;
-        let currentWeek = 0;
-        let currentLogFilter = 'all';
-
-        // ============================================
-        // FONCTIONS DE PERSISTANCE
-        // ============================================
-        function saveData() {
-            localStorage.setItem('motemail_domains', JSON.stringify(domains));
-            localStorage.setItem('motemail_emails', JSON.stringify(emails));
-            localStorage.setItem('motemail_events', JSON.stringify(events));
-            localStorage.setItem('motemail_tasks', JSON.stringify(tasks));
-            localStorage.setItem('motemail_logs', JSON.stringify(systemLogs));
-        }
-
-        function loadData() {
-            domains = JSON.parse(localStorage.getItem('motemail_domains')) || defaultDomains;
-            emails = JSON.parse(localStorage.getItem('motemail_emails')) || defaultEmails;
-            events = JSON.parse(localStorage.getItem('motemail_events')) || defaultEvents;
-            tasks = JSON.parse(localStorage.getItem('motemail_tasks')) || defaultTasks;
-        }
-
-        // ============================================
-        // FONCTIONS DE LOGS
-        // ============================================
-        function addLog(type, message, user = null) {
-            const log = {
-                id: Date.now() + Math.random(),
-                timestamp: new Date().toISOString(),
-                type: type, // success, error, info, warning
-                message: message,
-                user: user || (currentUser ? currentUser.email : 'anonyme')
+            // État global
+            const State = {
+                domains: [],
+                emails: [],
+                events: [],
+                tasks: [],
+                logs: [],
+                currentUser: null,
+                currentWeek: 0,
+                currentLogFilter: 'all'
             };
-            systemLogs.unshift(log);
-            // Garder seulement les 500 derniers logs
-            if (systemLogs.length > 500) systemLogs.pop();
-            saveData();
-            renderLogs();
-        }
 
-        function renderLogs() {
-            const container = document.getElementById('logsContainer');
-            if (!container) return;
-
-            const filtered = systemLogs.filter(log => {
-                if (currentLogFilter === 'all') return true;
-                return log.type === currentLogFilter;
-            });
-
-            if (filtered.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-tertiary);">Aucun log</div>';
-                return;
-            }
-
-            container.innerHTML = filtered.map(log => `
-                <div class="log-entry">
-                    <span class="log-time">${new Date(log.timestamp).toLocaleString('fr-FR')}</span>
-                    <span class="log-type ${log.type}">${log.type}</span>
-                    <span class="log-user">${log.user}</span>
-                    <span class="log-message">${log.message}</span>
-                </div>
-            `).join('');
-        }
-
-        function filterLogs(type) {
-            currentLogFilter = type;
-            document.querySelectorAll('.log-filter button').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            renderLogs();
-        }
-
-        function exportLogs() {
-            const data = JSON.stringify(systemLogs, null, 2);
-            const blob = new Blob([data], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `motemail-logs-${new Date().toISOString().split('T')[0]}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            addLog('info', 'Export des logs effectué');
-        }
-
-        function clearLogs() {
-            if (confirm('Effacer tous les logs ?')) {
-                systemLogs = [];
-                saveData();
-                renderLogs();
-                addLog('info', 'Logs effacés');
-            }
-        }
-
-        // ============================================
-        // INITIALISATION
-        // ============================================
-        document.addEventListener('DOMContentLoaded', () => {
-            loadData();
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.body.setAttribute('data-theme', savedTheme);
-            const moon = document.querySelector('.fa-moon');
-            const sun = document.querySelector('.fa-sun');
-            if (savedTheme === 'dark') { moon.style.display = 'none'; sun.style.display = 'inline-block'; }
-            updateStats();
-            renderDomainsTable();
-            renderAgenda();
-            renderTasks();
-            renderLogs();
-            addLog('info', 'Système initialisé');
-        });
-
-        // ============================================
-        // THÈME
-        // ============================================
-        function toggleTheme() {
-            const body = document.body;
-            const current = body.getAttribute('data-theme');
-            const newTheme = current === 'light' ? 'dark' : 'light';
-            body.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            const moon = document.querySelector('.fa-moon');
-            const sun = document.querySelector('.fa-sun');
-            if (newTheme === 'dark') { moon.style.display = 'none'; sun.style.display = 'inline-block'; }
-            else { moon.style.display = 'inline-block'; sun.style.display = 'none'; }
-            showNotification(`Thème ${newTheme === 'dark' ? 'sombre' : 'clair'} activé`);
-            addLog('info', `Thème changé: ${newTheme}`);
-        }
-
-        // ============================================
-        // MODALS
-        // ============================================
-        function showModal(type) { document.getElementById('modal-' + type).classList.add('active'); }
-        function closeModal(type) { document.getElementById('modal-' + type).classList.remove('active'); }
-
-        // ============================================
-        // NOTIFICATION
-        // ============================================
-        function showNotification(message, type = 'success') {
-            const notif = document.getElementById('notification');
-            notif.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
-            notif.className = 'notification ' + type + ' show';
-            setTimeout(() => notif.classList.remove('show'), 3500);
-        }
-
-        // ============================================
-        // CONNEXIONS AVEC LOGS
-        // ============================================
-        function handleGuestLogin() {
-            const email = document.getElementById('guestEmail').value;
-            if (!email) { 
-                showNotification('Email requis', 'error');
-                addLog('error', 'Tentative de connexion invité échouée: email manquant');
-                return;
-            }
-            currentUser = { type: 'guest', email: email, name: email.split('@')[0] };
-            closeModal('guest');
-            showMainApp();
-            showNotification('Bienvenue ' + currentUser.name);
-            addLog('success', `Connexion invité: ${email}`);
-        }
-
-        function handleBeneficiaryLogin() {
-            const email = document.getElementById('beneficiaryEmail').value;
-            const pass = document.getElementById('beneficiaryPassword').value;
-            
-            if (!email || !pass) {
-                showNotification('Email et mot de passe requis', 'error');
-                addLog('error', `Tentative de connexion bénéficiaire échouée: champs manquants`);
-                return;
-            }
-            
-            let found = false;
-            for (let d of domains) {
-                const b = d.beneficiaries.find(b => b.email === email && b.password === pass);
-                if (b) {
-                    currentUser = { type: 'beneficiary', email: email, name: b.name, domain: d.name, domainId: d.id };
-                    closeModal('beneficiary');
-                    showMainApp();
-                    showNotification('Bienvenue ' + b.name);
-                    addLog('success', `Connexion bénéficiaire: ${email} (domaine: ${d.name})`);
-                    found = true;
-                    return;
+            // ============================================
+            // UTILS
+            // ============================================
+            const Storage = {
+                load() {
+                    State.domains = JSON.parse(localStorage.getItem('motemail_domains')) || JSON.parse(JSON.stringify(defaultDomains));
+                    State.emails = JSON.parse(localStorage.getItem('motemail_emails')) || JSON.parse(JSON.stringify(defaultEmails));
+                    State.events = JSON.parse(localStorage.getItem('motemail_events')) || JSON.parse(JSON.stringify(defaultEvents));
+                    State.tasks = JSON.parse(localStorage.getItem('motemail_tasks')) || JSON.parse(JSON.stringify(defaultTasks));
+                    State.logs = JSON.parse(localStorage.getItem('motemail_logs')) || [];
+                },
+                save() {
+                    localStorage.setItem('motemail_domains', JSON.stringify(State.domains));
+                    localStorage.setItem('motemail_emails', JSON.stringify(State.emails));
+                    localStorage.setItem('motemail_events', JSON.stringify(State.events));
+                    localStorage.setItem('motemail_tasks', JSON.stringify(State.tasks));
+                    localStorage.setItem('motemail_logs', JSON.stringify(State.logs));
                 }
-            }
-            if (!found) {
-                showNotification('Identifiants incorrects', 'error');
-                addLog('error', `Tentative de connexion bénéficiaire échouée: ${email}`);
-            }
-        }
+            };
 
-        function handleDomainLogin() {
-            const id = document.getElementById('domainAdminId').value;
-            const pass = document.getElementById('domainAdminPassword').value;
-            
-            if (!id || !pass) {
-                showNotification('Identifiant et mot de passe requis', 'error');
-                addLog('error', `Tentative de connexion admin domaine échouée: champs manquants`);
-                return;
-            }
-            
-            const domain = domains.find(d => d.adminId === id && d.adminPassword === pass);
-            if (domain) {
-                currentUser = { type: 'domain_admin', email: id, name: domain.adminName, domain: domain.name, domainId: domain.id, maxEmails: domain.maxEmails, beneficiaries: domain.beneficiaries };
-                closeModal('domain');
-                showMainApp();
-                document.getElementById('domainAdminNav').style.display = 'flex';
-                showSection('domain-admin');
-                renderDomainAdmin();
-                updateAccountInfo();
-                showNotification('Bienvenue Admin ' + domain.name);
-                addLog('success', `Connexion admin domaine: ${id} (domaine: ${domain.name})`);
-            } else {
-                showNotification('Identifiants incorrects', 'error');
-                addLog('error', `Tentative de connexion admin domaine échouée: ${id}`);
-            }
-        }
-
-        function handleMoteoLogin() {
-            const id = document.getElementById('moteoAdminId').value;
-            const pass = document.getElementById('moteoAdminPassword').value;
-            
-            if (!id || !pass) {
-                showNotification('Identifiant et mot de passe requis', 'error');
-                addLog('error', `Tentative de connexion super admin échouée: champs manquants`);
-                return;
-            }
-            
-            const admin = SUPER_ADMINS.find(a => a.id === id && a.password === pass);
-            if (admin) {
-                currentUser = { type: 'super_admin', email: admin.id, name: admin.name };
-                closeModal('moteo');
-                showMainApp();
-                document.getElementById('superAdminNav').style.display = 'flex';
-                showSection('super-admin');
-                renderSuperAdmin();
-                renderDomainsTable();
-                renderLogs();
-                updateAccountInfo();
-                showNotification('Bienvenue Super Admin ' + admin.name);
-                addLog('success', `Connexion super admin: ${id}`);
-            } else {
-                showNotification('Identifiants incorrects', 'error');
-                addLog('error', `Tentative de connexion super admin échouée: ${id}`);
-            }
-        }
-
-        function showMainApp() {
-            document.getElementById('landingPage').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-            document.getElementById('userNameDisplay').textContent = currentUser.name;
-            let role = '';
-            if (currentUser.type === 'guest') role = 'Invité';
-            else if (currentUser.type === 'beneficiary') role = 'Étudiant';
-            else if (currentUser.type === 'domain_admin') role = 'Admin Établissement';
-            else if (currentUser.type === 'super_admin') role = 'Admin Motéo';
-            document.getElementById('userRoleDisplay').textContent = role;
-            document.getElementById('welcomeName').textContent = currentUser.name;
-            if (currentUser.type === 'guest') {
-                document.getElementById('welcomeMessage').textContent = 'Mode invité';
-                showSection('dashboard');
-            }
-        }
-
-        function showSection(section) {
-            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            document.getElementById(section + '-section').classList.add('active');
-            if (section === 'super-admin') { renderSuperAdmin(); renderDomainsTable(); renderLogs(); }
-            if (section === 'domain-admin') renderDomainAdmin();
-            if (section === 'agenda') renderAgenda();
-            if (section === 'tasks') renderTasks();
-            if (section === 'settings') updateAccountInfo();
-        }
-
-        // ============================================
-        // STATS
-        // ============================================
-        function updateStats() {
-            const totalBeneficiaries = domains.reduce((acc, d) => acc + d.beneficiaries.length, 0);
-            document.getElementById('totalUsers').textContent = totalBeneficiaries + SUPER_ADMINS.length;
-            document.getElementById('totalEmails').textContent = emails.length;
-            document.getElementById('totalEvents').textContent = events.length;
-            if (document.getElementById('statEmails')) {
-                document.getElementById('statEmails').textContent = emails.length;
-                document.getElementById('statEvents').textContent = events.length;
-                document.getElementById('statTasks').textContent = tasks.length;
-            }
-        }
-
-        // ============================================
-        // EMAILS
-        // ============================================
-        function showCompose() { showSection('compose'); document.getElementById('composeFrom').value = currentUser.email; }
-        function handleSendEmail() {
-            const to = document.getElementById('composeTo').value;
-            if (!to) { 
-                showNotification('Destinataire requis', 'error');
-                addLog('error', `Tentative d'envoi d'email sans destinataire par ${currentUser.email}`);
-                return;
-            }
-            emails.unshift({ id: Date.now(), from: currentUser.email, to, subject: document.getElementById('composeSubject').value || '(Pas de sujet)', body: document.getElementById('composeBody').value || '(Message vide)', date: new Date().toISOString(), read: false });
-            saveData();
-            showNotification('Email envoyé');
-            showSection('emails');
-            addLog('success', `Email envoyé de ${currentUser.email} à ${to}`);
-        }
-
-        // ============================================
-        // AGENDA
-        // ============================================
-        function getStartOfWeek() {
-            const d = new Date();
-            d.setDate(d.getDate() + currentWeek * 7 - d.getDay() + 1);
-            return d;
-        }
-        function updateWeekDisplay() {
-            const start = getStartOfWeek();
-            const end = new Date(start); end.setDate(end.getDate() + 6);
-            document.getElementById('currentWeekDisplay').textContent = `Semaine du ${start.toLocaleDateString('fr-FR')} au ${end.toLocaleDateString('fr-FR')}`;
-        }
-        function renderAgenda() {
-            const cal = document.getElementById('weeklyCalendar');
-            if (!cal) return;
-            const start = getStartOfWeek();
-            const hours = ['08:00', '09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'];
-            let html = '<div class="calendar-header"><div class="time-label"></div>';
-            for (let i = 0; i < 7; i++) {
-                const d = new Date(start); d.setDate(d.getDate() + i);
-                html += `<div class="day-header">${['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'][i]}<br><small>${d.toLocaleDateString('fr-FR')}</small></div>`;
-            }
-            html += '</div>';
-            hours.forEach(h => {
-                html += '<div class="calendar-row"><div class="time-label">'+h+'</div>';
-                for (let day = 0; day < 7; day++) {
-                    const ev = events.find(e => e.day === day && e.startTime === h);
-                    if (ev) html += `<div class="calendar-cell event" style="background:${ev.color}20; border-left:3px solid ${ev.color};" onclick="viewEvent(${ev.id})"><strong>${ev.title}</strong><br><small>${ev.room}</small></div>`;
-                    else html += `<div class="calendar-cell" onclick="showAddEventModal(${day},'${h}')"></div>`;
+            const Notification = {
+                show(message, type = 'success') {
+                    const notif = document.getElementById('notification');
+                    notif.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+                    notif.className = 'notification ' + type + ' show';
+                    setTimeout(() => notif.classList.remove('show'), 3500);
                 }
-                html += '</div>';
+            };
+
+            const Logs = {
+                add(type, message, user = null) {
+                    const log = {
+                        id: Date.now() + Math.random(),
+                        timestamp: new Date().toISOString(),
+                        type,
+                        message,
+                        user: user || (State.currentUser ? State.currentUser.email : 'anonyme')
+                    };
+                    State.logs.unshift(log);
+                    if (State.logs.length > 500) State.logs.pop();
+                    Storage.save();
+                    UI.renderLogs();
+                },
+                filter(type) {
+                    State.currentLogFilter = type;
+                    document.querySelectorAll('.log-filter button').forEach(btn => btn.classList.remove('active'));
+                    event.target.classList.add('active');
+                    UI.renderLogs();
+                },
+                export() {
+                    const data = JSON.stringify(State.logs, null, 2);
+                    const blob = new Blob([data], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `motemail-logs-${new Date().toISOString().split('T')[0]}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    this.add('info', 'Export des logs effectué');
+                },
+                clear() {
+                    if (confirm('Effacer tous les logs ?')) {
+                        State.logs = [];
+                        Storage.save();
+                        UI.renderLogs();
+                        this.add('info', 'Logs effacés');
+                    }
+                }
+            };
+
+            // ============================================
+            // UI
+            // ============================================
+            const UI = {
+                init() {
+                    Storage.load();
+                    this.applyTheme();
+                    this.updateStats();
+                    this.renderDomainsTable();
+                    this.renderAgenda();
+                    this.renderTasks();
+                    this.renderLogs();
+                    Logs.add('info', 'Système initialisé');
+                },
+
+                applyTheme() {
+                    const savedTheme = localStorage.getItem('theme') || 'light';
+                    document.body.setAttribute('data-theme', savedTheme);
+                    const moon = document.querySelector('.fa-moon');
+                    const sun = document.querySelector('.fa-sun');
+                    if (savedTheme === 'dark') {
+                        moon.style.display = 'none';
+                        sun.style.display = 'inline-block';
+                    } else {
+                        moon.style.display = 'inline-block';
+                        sun.style.display = 'none';
+                    }
+                },
+
+                toggleTheme() {
+                    const body = document.body;
+                    const current = body.getAttribute('data-theme');
+                    const newTheme = current === 'light' ? 'dark' : 'light';
+                    body.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    const moon = document.querySelector('.fa-moon');
+                    const sun = document.querySelector('.fa-sun');
+                    if (newTheme === 'dark') {
+                        moon.style.display = 'none';
+                        sun.style.display = 'inline-block';
+                    } else {
+                        moon.style.display = 'inline-block';
+                        sun.style.display = 'none';
+                    }
+                    Notification.show(`Thème ${newTheme === 'dark' ? 'sombre' : 'clair'} activé`);
+                    Logs.add('info', `Thème changé: ${newTheme}`);
+                },
+
+                toggleMobileMenu() {
+                    const sidebar = document.getElementById('sidebar');
+                    const overlay = document.getElementById('sidebarOverlay');
+                    const btn = document.getElementById('mobileMenuBtn');
+                    
+                    sidebar.classList.toggle('open');
+                    overlay.classList.toggle('active');
+                    
+                    btn.innerHTML = sidebar.classList.contains('open') ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+                },
+
+                closeMobileMenu() {
+                    document.getElementById('sidebar').classList.remove('open');
+                    document.getElementById('sidebarOverlay').classList.remove('active');
+                    document.getElementById('mobileMenuBtn').innerHTML = '<i class="fas fa-bars"></i>';
+                },
+
+                showModal(type) {
+                    document.getElementById('modal-' + type).classList.add('active');
+                },
+
+                closeAllModals() {
+                    document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+                },
+
+                showSection(section) {
+                    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                    document.getElementById(section + '-section').classList.add('active');
+                    if (section === 'super-admin') {
+                        this.renderSuperAdmin();
+                        this.renderDomainsTable();
+                        this.renderLogs();
+                    }
+                    if (section === 'domain-admin') this.renderDomainAdmin();
+                    if (section === 'agenda') this.renderAgenda();
+                    if (section === 'tasks') this.renderTasks();
+                    if (section === 'settings') this.updateAccountInfo();
+                    this.closeMobileMenu();
+                },
+
+                showMainApp() {
+                    document.getElementById('landingPage').style.display = 'none';
+                    document.getElementById('mainApp').style.display = 'block';
+                    document.getElementById('userNameDisplay').textContent = State.currentUser.name;
+                    
+                    const roles = {
+                        guest: 'Invité',
+                        beneficiary: 'Étudiant',
+                        domain_admin: 'Admin Établissement',
+                        super_admin: 'Admin Motéo'
+                    };
+                    document.getElementById('userRoleDisplay').textContent = roles[State.currentUser.type];
+                    document.getElementById('welcomeName').textContent = State.currentUser.name;
+                    
+                    if (State.currentUser.type === 'guest') {
+                        document.getElementById('welcomeMessage').textContent = 'Mode invité';
+                        this.showSection('dashboard');
+                    }
+                },
+
+                updateStats() {
+                    const totalBeneficiaries = State.domains.reduce((acc, d) => acc + d.beneficiaries.length, 0);
+                    document.getElementById('totalUsers').textContent = totalBeneficiaries + SUPER_ADMINS.length;
+                    document.getElementById('totalEmails').textContent = State.emails.length;
+                    document.getElementById('totalEvents').textContent = State.events.length;
+                    
+                    ['statEmails', 'statEvents', 'statTasks'].forEach((id, i) => {
+                        const el = document.getElementById(id);
+                        if (el) el.textContent = i === 0 ? State.emails.length : i === 1 ? State.events.length : State.tasks.length;
+                    });
+                },
+
+                // Logs
+                renderLogs() {
+                    const container = document.getElementById('logsContainer');
+                    if (!container) return;
+
+                    const filtered = State.logs.filter(log => State.currentLogFilter === 'all' ? true : log.type === State.currentLogFilter);
+
+                    if (filtered.length === 0) {
+                        container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-tertiary);">Aucun log</div>';
+                        return;
+                    }
+
+                    container.innerHTML = filtered.map(log => `
+                        <div class="log-entry">
+                            <span class="log-time">${new Date(log.timestamp).toLocaleString('fr-FR')}</span>
+                            <span class="log-type ${log.type}">${log.type}</span>
+                            <span class="log-user">${log.user}</span>
+                            <span class="log-message">${log.message}</span>
+                        </div>
+                    `).join('');
+                },
+
+                // Agenda
+                getStartOfWeek() {
+                    const d = new Date();
+                    d.setDate(d.getDate() + State.currentWeek * 7 - d.getDay() + 1);
+                    return d;
+                },
+
+                renderAgenda() {
+                    const cal = document.getElementById('weeklyCalendar');
+                    if (!cal) return;
+                    
+                    const start = this.getStartOfWeek();
+                    const hours = ['08:00', '09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'];
+                    
+                    let html = '<div class="calendar-header"><div class="time-label"></div>';
+                    for (let i = 0; i < 7; i++) {
+                        const d = new Date(start);
+                        d.setDate(d.getDate() + i);
+                        html += `<div class="day-header">${['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'][i]}<br><small>${d.getDate()}</small></div>`;
+                    }
+                    html += '</div>';
+
+                    hours.forEach(h => {
+                        html += '<div class="calendar-row"><div class="time-label">'+h+'</div>';
+                        for (let day = 0; day < 7; day++) {
+                            const ev = State.events.find(e => e.day === day && e.startTime === h);
+                            if (ev) {
+                                html += `<div class="calendar-cell event" style="background:${ev.color}20; border-left:3px solid ${ev.color};" data-event-id="${ev.id}"><strong>${ev.title}</strong><br><small>${ev.room}</small></div>`;
+                            } else {
+                                html += `<div class="calendar-cell" data-day="${day}" data-hour="${h}"></div>`;
+                            }
+                        }
+                        html += '</div>';
+                    });
+                    
+                    cal.innerHTML = html;
+                    document.getElementById('currentWeekDisplay').textContent = start.toLocaleDateString('fr-FR');
+                },
+
+                // Tâches
+                renderTasks() {
+                    const containers = {
+                        todo: document.getElementById('todoTasks'),
+                        'in-progress': document.getElementById('inProgressTasks'),
+                        done: document.getElementById('doneTasks')
+                    };
+
+                    Object.keys(containers).forEach(status => {
+                        if (containers[status]) {
+                            containers[status].innerHTML = State.tasks
+                                .filter(t => t.status === status)
+                                .map(t => `<div class="task-item ${status === 'todo' ? 'todo' : status === 'in-progress' ? 'in-progress' : 'done'}" draggable="true" data-task-id="${t.id}"><strong>${t.title}</strong><br><small>📅 ${new Date(t.dueDate).toLocaleDateString('fr-FR')}</small></div>`)
+                                .join('');
+                        }
+                    });
+                },
+
+                // Super Admin
+                renderSuperAdmin() {
+                    const totalBeneficiaries = State.domains.reduce((acc, d) => acc + d.beneficiaries.length, 0);
+                    document.getElementById('superDomains').textContent = State.domains.length;
+                    document.getElementById('superAdmins').textContent = SUPER_ADMINS.length;
+                    document.getElementById('superBeneficiaries').textContent = totalBeneficiaries;
+                    document.getElementById('superEmails').textContent = totalBeneficiaries;
+                },
+
+                renderDomainsTable() {
+                    const tbody = document.getElementById('domainsTable');
+                    if (!tbody) return;
+
+                    if (State.domains.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 1rem;">Aucun domaine</td></tr>';
+                        return;
+                    }
+
+                    let html = '';
+                    State.domains.forEach(d => {
+                        let badge = '';
+                        if (d.paymentMethod === 'gratuit') {
+                            badge = '<span style="background:#10b98120;color:#10b981;padding:2px 6px;border-radius:20px;">Gratuit</span>';
+                        } else if (d.paymentMethod === 'robux') {
+                            badge = `<span style="background:#ef444420;color:#ef4444;padding:2px 6px;border-radius:20px;">${d.paymentAmount} Robux</span>`;
+                        } else {
+                            badge = `<span style="background:#5865f220;color:#5865f2;padding:2px 6px;border-radius:20px;">${d.paymentAmount} Nitro</span>`;
+                        }
+
+                        html += `<tr>
+                            <td><strong>${d.name}</strong></td>
+                            <td>${d.adminId}</td>
+                            <td>${d.beneficiaries.length}/${d.maxEmails}</td>
+                            <td>${badge}</td>
+                            <td>
+                                <button class="btn-icon" data-domain="${d.name}" data-action="view-domain" style="width:30px;height:30px;"><i class="fas fa-eye"></i></button>
+                                <button class="btn-icon" data-domain="${d.name}" data-action="edit-domain" style="width:30px;height:30px;"><i class="fas fa-edit"></i></button>
+                                <button class="btn-icon" data-domain="${d.name}" data-action="delete-domain" style="width:30px;height:30px;"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>`;
+                    });
+                    tbody.innerHTML = html;
+                },
+
+                // Admin Domaine
+                renderDomainAdmin() {
+                    if (!State.currentUser || !State.currentUser.domainId) return;
+                    const d = State.domains.find(d => d.id === State.currentUser.domainId);
+                    if (!d) return;
+                    
+                    document.getElementById('quotaUsed').textContent = d.beneficiaries.length;
+                    document.getElementById('quotaMax').textContent = d.maxEmails;
+                    document.getElementById('quotaFill').style.width = (d.beneficiaries.length / d.maxEmails) * 100 + '%';
+                },
+
+                // Paramètres
+                updateAccountInfo() {
+                    if (!State.currentUser) return;
+                    
+                    const roles = {
+                        guest: 'Invité',
+                        beneficiary: 'Étudiant',
+                        domain_admin: 'Admin Établissement',
+                        super_admin: 'Admin Motéo'
+                    };
+                    
+                    document.getElementById('accountName').textContent = State.currentUser.name;
+                    document.getElementById('accountEmail').textContent = State.currentUser.email;
+                    document.getElementById('accountRole').textContent = roles[State.currentUser.type];
+                },
+
+                // Domain actions
+                viewDomainDetails(name) {
+                    const d = State.domains.find(d => d.name === name);
+                    if (!d) return;
+                    alert(`Domaine: ${d.name}\nAdmin: ${d.adminId}\nQuota: ${d.beneficiaries.length}/${d.maxEmails}\nPaiement: ${d.paymentMethod} ${d.paymentAmount ? d.paymentAmount : ''}`);
+                    Logs.add('info', `Détails du domaine consultés: ${name} par ${State.currentUser?.email || 'anonyme'}`);
+                },
+
+                editDomain(name) {
+                    const d = State.domains.find(d => d.name === name);
+                    const q = prompt('Nouveau quota:', d.maxEmails);
+                    if (q && !isNaN(q) && parseInt(q) > 0) {
+                        d.maxEmails = parseInt(q);
+                        Storage.save();
+                        this.renderDomainsTable();
+                        Notification.show('Quota mis à jour');
+                        Logs.add('info', `Quota modifié pour ${name}: ${q} par ${State.currentUser.email}`);
+                    }
+                },
+
+                deleteDomain(name) {
+                    if (confirm('Supprimer ce domaine ?')) {
+                        State.domains = State.domains.filter(d => d.name !== name);
+                        Storage.save();
+                        this.renderDomainsTable();
+                        this.renderSuperAdmin();
+                        Notification.show('Domaine supprimé');
+                        Logs.add('warning', `Domaine supprimé: ${name} par ${State.currentUser.email}`);
+                    }
+                },
+
+                createDomain() {
+                    const name = document.getElementById('newDomainName').value.trim();
+                    const quota = document.getElementById('newDomainQuota').value;
+                    const adminPassword = document.getElementById('newAdminPassword').value;
+                    const method = document.getElementById('paymentMethod').value;
+                    const amount = document.getElementById('paymentAmount').value;
+
+                    if (!name || !adminPassword) {
+                        Notification.show('Champs requis', 'error');
+                        Logs.add('error', 'Tentative de création de domaine avec champs manquants');
+                        return;
+                    }
+                    
+                    if (State.domains.some(d => d.name === name)) {
+                        Notification.show('Domaine existe déjà', 'error');
+                        Logs.add('error', `Tentative de création de domaine existant: ${name}`);
+                        return;
+                    }
+
+                    const newDomain = {
+                        id: Date.now(),
+                        name,
+                        adminId: 'admin@' + name,
+                        adminPassword,
+                        adminName: 'Admin ' + name.split('.')[0],
+                        maxEmails: parseInt(quota),
+                        paymentMethod: method,
+                        paymentAmount: method === 'gratuit' ? 0 : parseInt(amount),
+                        paymentDate: new Date().toISOString().split('T')[0],
+                        beneficiaries: []
+                    };
+
+                    State.domains.push(newDomain);
+                    Storage.save();
+                    this.renderDomainsTable();
+                    this.renderSuperAdmin();
+                    Notification.show('Domaine créé');
+                    Logs.add('success', `Domaine créé: ${name} (quota: ${quota}, paiement: ${method} ${amount}) par ${State.currentUser.email}`);
+
+                    document.getElementById('newDomainName').value = '';
+                    document.getElementById('newAdminPassword').value = '';
+                    document.getElementById('paymentAmount').value = '';
+                },
+
+                createBeneficiary() {
+                    const email = document.getElementById('newBeneficiaryEmail').value.trim();
+                    const name = document.getElementById('newBeneficiaryName').value.trim();
+
+                    if (!email || !name) {
+                        Notification.show('Champs requis', 'error');
+                        Logs.add('error', 'Tentative d\'ajout de bénéficiaire avec champs manquants');
+                        return;
+                    }
+
+                    const d = State.domains.find(d => d.id === State.currentUser.domainId);
+                    if (d.beneficiaries.length >= d.maxEmails) {
+                        Notification.show('Quota atteint', 'error');
+                        Logs.add('error', `Tentative d'ajout de bénéficiaire: quota atteint pour ${d.name}`);
+                        return;
+                    }
+
+                    d.beneficiaries.push({
+                        id: Date.now(),
+                        email,
+                        password: 'Default123!',
+                        name
+                    });
+
+                    Storage.save();
+                    this.renderDomainAdmin();
+                    Notification.show('Bénéficiaire ajouté');
+                    Logs.add('success', `Bénéficiaire ajouté: ${email} (${name}) dans ${d.name} par ${State.currentUser.email}`);
+
+                    document.getElementById('newBeneficiaryEmail').value = '';
+                    document.getElementById('newBeneficiaryName').value = '';
+                }
+            };
+
+            // ============================================
+            // GESTIONNAIRES DE CONNEXION
+            // ============================================
+            const Auth = {
+                loginGuest() {
+                    const email = document.getElementById('guestEmail').value;
+                    if (!email) {
+                        Notification.show('Email requis', 'error');
+                        Logs.add('error', 'Tentative de connexion invité échouée: email manquant');
+                        return;
+                    }
+                    State.currentUser = { type: 'guest', email, name: email.split('@')[0] };
+                    UI.closeAllModals();
+                    UI.showMainApp();
+                    Notification.show('Bienvenue ' + State.currentUser.name);
+                    Logs.add('success', `Connexion invité: ${email}`);
+                },
+
+                loginBeneficiary() {
+                    const email = document.getElementById('beneficiaryEmail').value;
+                    const pass = document.getElementById('beneficiaryPassword').value;
+
+                    if (!email || !pass) {
+                        Notification.show('Email et mot de passe requis', 'error');
+                        Logs.add('error', 'Tentative de connexion bénéficiaire échouée: champs manquants');
+                        return;
+                    }
+
+                    for (let d of State.domains) {
+                        const b = d.beneficiaries.find(b => b.email === email && b.password === pass);
+                        if (b) {
+                            State.currentUser = { type: 'beneficiary', email, name: b.name, domain: d.name, domainId: d.id };
+                            UI.closeAllModals();
+                            UI.showMainApp();
+                            Notification.show('Bienvenue ' + b.name);
+                            Logs.add('success', `Connexion bénéficiaire: ${email} (domaine: ${d.name})`);
+                            return;
+                        }
+                    }
+                    Notification.show('Identifiants incorrects', 'error');
+                    Logs.add('error', `Tentative de connexion bénéficiaire échouée: ${email}`);
+                },
+
+                loginDomain() {
+                    const id = document.getElementById('domainAdminId').value;
+                    const pass = document.getElementById('domainAdminPassword').value;
+
+                    if (!id || !pass) {
+                        Notification.show('Identifiant et mot de passe requis', 'error');
+                        Logs.add('error', 'Tentative de connexion admin domaine échouée: champs manquants');
+                        return;
+                    }
+
+                    const domain = State.domains.find(d => d.adminId === id && d.adminPassword === pass);
+                    if (domain) {
+                        State.currentUser = { type: 'domain_admin', email: id, name: domain.adminName, domain: domain.name, domainId: domain.id, maxEmails: domain.maxEmails, beneficiaries: domain.beneficiaries };
+                        UI.closeAllModals();
+                        UI.showMainApp();
+                        document.getElementById('domainAdminNav').style.display = 'flex';
+                        UI.showSection('domain-admin');
+                        UI.renderDomainAdmin();
+                        UI.updateAccountInfo();
+                        Notification.show('Bienvenue Admin ' + domain.name);
+                        Logs.add('success', `Connexion admin domaine: ${id} (domaine: ${domain.name})`);
+                    } else {
+                        Notification.show('Identifiants incorrects', 'error');
+                        Logs.add('error', `Tentative de connexion admin domaine échouée: ${id}`);
+                    }
+                },
+
+                loginMoteo() {
+                    const id = document.getElementById('moteoAdminId').value;
+                    const pass = document.getElementById('moteoAdminPassword').value;
+
+                    if (!id || !pass) {
+                        Notification.show('Identifiant et mot de passe requis', 'error');
+                        Logs.add('error', 'Tentative de connexion super admin échouée: champs manquants');
+                        return;
+                    }
+
+                    const admin = SUPER_ADMINS.find(a => a.id === id && a.password === pass);
+                    if (admin) {
+                        State.currentUser = { type: 'super_admin', email: admin.id, name: admin.name };
+                        UI.closeAllModals();
+                        UI.showMainApp();
+                        document.getElementById('superAdminNav').style.display = 'flex';
+                        UI.showSection('super-admin');
+                        UI.renderSuperAdmin();
+                        UI.renderDomainsTable();
+                        UI.renderLogs();
+                        UI.updateAccountInfo();
+                        Notification.show('Bienvenue Super Admin ' + admin.name);
+                        Logs.add('success', `Connexion super admin: ${id}`);
+                    } else {
+                        Notification.show('Identifiants incorrects', 'error');
+                        Logs.add('error', `Tentative de connexion super admin échouée: ${id}`);
+                    }
+                },
+
+                logout() {
+                    if (State.currentUser) {
+                        Logs.add('info', `Déconnexion: ${State.currentUser.email}`);
+                    }
+                    State.currentUser = null;
+                    document.getElementById('mainApp').style.display = 'none';
+                    document.getElementById('landingPage').style.display = 'block';
+                    document.getElementById('superAdminNav').style.display = 'none';
+                    document.getElementById('domainAdminNav').style.display = 'none';
+                    Notification.show('Déconnexion réussie');
+                    UI.closeMobileMenu();
+                }
+            };
+
+            // ============================================
+            // EMAILS
+            // ============================================
+            const Email = {
+                showCompose() {
+                    UI.showSection('compose');
+                    document.getElementById('composeFrom').value = State.currentUser.email;
+                },
+
+                send() {
+                    const to = document.getElementById('composeTo').value;
+                    if (!to) {
+                        Notification.show('Destinataire requis', 'error');
+                        Logs.add('error', `Tentative d'envoi d'email sans destinataire par ${State.currentUser.email}`);
+                        return;
+                    }
+
+                    State.emails.unshift({
+                        id: Date.now(),
+                        from: State.currentUser.email,
+                        to,
+                        subject: document.getElementById('composeSubject').value || '(Pas de sujet)',
+                        body: document.getElementById('composeBody').value || '(Message vide)',
+                        date: new Date().toISOString(),
+                        read: false
+                    });
+
+                    Storage.save();
+                    Notification.show('Email envoyé');
+                    UI.showSection('emails');
+                    Logs.add('success', `Email envoyé de ${State.currentUser.email} à ${to}`);
+
+                    document.getElementById('composeTo').value = '';
+                    document.getElementById('composeSubject').value = '';
+                    document.getElementById('composeBody').value = '';
+                }
+            };
+
+            // ============================================
+            // AGENDA
+            // ============================================
+            const Agenda = {
+                previousWeek() {
+                    State.currentWeek--;
+                    UI.renderAgenda();
+                },
+                nextWeek() {
+                    State.currentWeek++;
+                    UI.renderAgenda();
+                },
+                addEvent(day, hour) {
+                    if (!State.currentUser || State.currentUser.type === 'guest') {
+                        Notification.show('Connectez-vous pour ajouter', 'error');
+                        Logs.add('error', 'Tentative d\'ajout d\'événement sans connexion');
+                        return;
+                    }
+
+                    const title = prompt('Titre du cours :');
+                    if (!title) return;
+                    
+                    const room = prompt('Salle :');
+                    if (!room) return;
+
+                    State.events.push({
+                        id: Date.now(),
+                        title,
+                        day: parseInt(day),
+                        startTime: hour,
+                        endTime: (parseInt(hour) + 1) + ':00',
+                        room,
+                        color: ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b'][Math.floor(Math.random() * 4)],
+                        description: ''
+                    });
+
+                    Storage.save();
+                    UI.renderAgenda();
+                    Notification.show('Cours ajouté');
+                    Logs.add('success', `Cours ajouté: ${title} (${room}) par ${State.currentUser.email}`);
+                },
+                viewEvent(id) {
+                    const e = State.events.find(e => e.id === id);
+                    if (e) alert(`📚 ${e.title}\n📍 ${e.room}\n🕐 ${e.startTime} - ${e.endTime}`);
+                }
+            };
+
+            // ============================================
+            // TÂCHES
+            // ============================================
+            const Tasks = {
+                add() {
+                    if (!State.currentUser || State.currentUser.type === 'guest') {
+                        Notification.show('Connectez-vous', 'error');
+                        Logs.add('error', 'Tentative d\'ajout de tâche sans connexion');
+                        return;
+                    }
+
+                    const title = prompt('Titre de la tâche :');
+                    if (!title) return;
+
+                    State.tasks.push({
+                        id: Date.now(),
+                        title,
+                        dueDate: new Date().toISOString().split('T')[0],
+                        status: 'todo',
+                        priority: 'moyenne'
+                    });
+
+                    Storage.save();
+                    UI.renderTasks();
+                    Notification.show('Tâche ajoutée');
+                    Logs.add('success', `Tâche ajoutée: ${title} par ${State.currentUser.email}`);
+                },
+                drop(e, status) {
+                    e.preventDefault();
+                    const id = e.dataTransfer.getData('text/plain');
+                    const task = State.tasks.find(t => t.id == id);
+                    if (task) {
+                        task.status = status;
+                        Storage.save();
+                        UI.renderTasks();
+                        Logs.add('info', `Tâche "${task.title}" déplacée vers ${status} par ${State.currentUser?.email || 'anonyme'}`);
+                    }
+                }
+            };
+
+            // ============================================
+            // INITIALISATION DES ÉCOUTEURS D'ÉVÉNEMENTS
+            // ============================================
+            function initEventListeners() {
+                // Theme toggle
+                document.getElementById('themeToggle').addEventListener('click', () => UI.toggleTheme());
+
+                // Mobile menu
+                document.getElementById('mobileMenuBtn').addEventListener('click', () => UI.toggleMobileMenu());
+                document.getElementById('sidebarOverlay').addEventListener('click', () => UI.closeMobileMenu());
+
+                // Landing page cards
+                document.querySelectorAll('.login-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        if (!e.target.classList.contains('card-btn')) {
+                            UI.showModal(card.dataset.modal);
+                        }
+                    });
+                    card.querySelector('.card-btn').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        UI.showModal(card.dataset.modal);
+                    });
+                });
+
+                // Modals close buttons
+                document.querySelectorAll('.modal-close').forEach(btn => {
+                    btn.addEventListener('click', () => UI.closeAllModals());
+                });
+
+                // Modal login buttons
+                document.querySelectorAll('[data-login]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const type = btn.dataset.login;
+                        Auth['login' + type.charAt(0).toUpperCase() + type.slice(1)]();
+                    });
+                });
+
+                // Navigation items
+                document.querySelectorAll('[data-section]').forEach(btn => {
+                    btn.addEventListener('click', () => UI.showSection(btn.dataset.section));
+                });
+
+                // Logout
+                document.getElementById('logoutBtn').addEventListener('click', () => Auth.logout());
+
+                // Compose
+                document.querySelectorAll('[data-action="compose"]').forEach(btn => {
+                    btn.addEventListener('click', () => Email.showCompose());
+                });
+                document.getElementById('sendEmailBtn').addEventListener('click', () => Email.send());
+
+                // Agenda
+                document.getElementById('prevWeek').addEventListener('click', () => Agenda.previousWeek());
+                document.getElementById('nextWeek').addEventListener('click', () => Agenda.nextWeek());
+                document.getElementById('addEventBtn').addEventListener('click', () => {
+                    if (State.currentUser && State.currentUser.type !== 'guest') {
+                        const day = prompt('Jour (0=Lun à 6=Dim) :');
+                        const hour = prompt('Heure (ex: 09:00) :');
+                        if (day && hour) Agenda.addEvent(day, hour);
+                    } else {
+                        Notification.show('Connectez-vous pour ajouter', 'error');
+                    }
+                });
+
+                // Calendar delegation
+                document.getElementById('weeklyCalendar').addEventListener('click', (e) => {
+                    const cell = e.target.closest('.calendar-cell');
+                    if (!cell) return;
+                    
+                    if (cell.dataset.eventId) {
+                        Agenda.viewEvent(parseInt(cell.dataset.eventId));
+                    } else if (cell.dataset.day && cell.dataset.hour) {
+                        Agenda.addEvent(cell.dataset.day, cell.dataset.hour);
+                    }
+                });
+
+                // Tasks
+                document.getElementById('addTaskBtn').addEventListener('click', () => Tasks.add());
+                document.querySelectorAll('[data-action="task"]').forEach(btn => {
+                    btn.addEventListener('click', () => Tasks.add());
+                });
+
+                // Task drag
+                document.addEventListener('dragstart', (e) => {
+                    const task = e.target.closest('[data-task-id]');
+                    if (task) {
+                        e.dataTransfer.setData('text/plain', task.dataset.taskId);
+                    }
+                });
+
+                // Super admin
+                document.getElementById('paymentMethod').addEventListener('change', (e) => {
+                    document.getElementById('paymentAmount').style.display = e.target.value === 'gratuit' ? 'none' : 'block';
+                });
+
+                document.getElementById('createDomainBtn').addEventListener('click', () => UI.createDomain());
+
+                // Logs filters
+                document.querySelectorAll('[data-log-filter]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        Logs.filter(btn.dataset.logFilter);
+                    });
+                });
+
+                document.getElementById('exportLogsBtn').addEventListener('click', () => Logs.export());
+                document.getElementById('clearLogsBtn').addEventListener('click', () => Logs.clear());
+
+                // Domains actions delegation
+                document.getElementById('domainsTable').addEventListener('click', (e) => {
+                    const btn = e.target.closest('button');
+                    if (!btn) return;
+                    
+                    const domain = btn.dataset.domain;
+                    const action = btn.dataset.action;
+                    
+                    if (action === 'view-domain') UI.viewDomainDetails(domain);
+                    else if (action === 'edit-domain') UI.editDomain(domain);
+                    else if (action === 'delete-domain') UI.deleteDomain(domain);
+                });
+
+                // Domain admin
+                document.getElementById('createBeneficiaryBtn').addEventListener('click', () => UI.createBeneficiary());
+
+                // Settings
+                document.getElementById('changePasswordBtn').addEventListener('click', () => {
+                    Notification.show('Fonctionnalité à venir', 'info');
+                    Logs.add('info', 'Tentative de changement de mot de passe');
+                });
+
+                // Keyboard: Escape to close modals and menu
+                document.addEventListener('keydown', (e) => {
+                    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                    if (e.key === 'Escape') {
+                        UI.closeAllModals();
+                        UI.closeMobileMenu();
+                    }
+                });
+            }
+
+            // ============================================
+            // EXPOSITION DES FONCTIONS PUBLIQUES (pour drag & drop)
+            // ============================================
+            window.App = {
+                dropTask: (e, status) => Tasks.drop(e, status)
+            };
+
+            // Initialisation
+            document.addEventListener('DOMContentLoaded', () => {
+                UI.init();
+                initEventListeners();
             });
-            cal.innerHTML = html;
-            updateWeekDisplay();
-        }
-        function previousWeek() { currentWeek--; renderAgenda(); }
-        function nextWeek() { currentWeek++; renderAgenda(); }
-        function showAddEventModal(day, hour) {
-            if (!currentUser || currentUser.type === 'guest') { 
-                showNotification('Connectez-vous pour ajouter', 'error');
-                addLog('error', 'Tentative d\'ajout d\'événement sans connexion');
-                return;
-            }
-            const title = prompt('Titre du cours :'); if (!title) return;
-            const room = prompt('Salle :'); if (!room) return;
-            events.push({ id: Date.now(), title, day, startTime: hour, endTime: (parseInt(hour)+1)+':00', room, color: ['#3b82f6','#8b5cf6','#10b981','#f59e0b'][Math.floor(Math.random()*4)], description: '' });
-            saveData();
-            renderAgenda();
-            showNotification('Cours ajouté');
-            addLog('success', `Cours ajouté: ${title} (${room}) par ${currentUser.email}`);
-        }
-        function viewEvent(id) {
-            const e = events.find(e => e.id === id);
-            if (!e) return;
-            alert(`📚 ${e.title}\n📍 ${e.room}\n🕐 ${e.startTime} - ${e.endTime}`);
-        }
-
-        // ============================================
-        // TÂCHES
-        // ============================================
-        function renderTasks() {
-            const todo = document.getElementById('todoTasks');
-            const prog = document.getElementById('inProgressTasks');
-            const done = document.getElementById('doneTasks');
-            if (todo) todo.innerHTML = tasks.filter(t => t.status === 'todo').map(t => `<div class="task-item todo" draggable="true" ondragstart="dragTask(event,${t.id})"><strong>${t.title}</strong><br><small>📅 ${new Date(t.dueDate).toLocaleDateString('fr-FR')}</small></div>`).join('');
-            if (prog) prog.innerHTML = tasks.filter(t => t.status === 'in-progress').map(t => `<div class="task-item in-progress" draggable="true" ondragstart="dragTask(event,${t.id})"><strong>${t.title}</strong><br><small>📅 ${new Date(t.dueDate).toLocaleDateString('fr-FR')}</small></div>`).join('');
-            if (done) done.innerHTML = tasks.filter(t => t.status === 'done').map(t => `<div class="task-item done" draggable="true" ondragstart="dragTask(event,${t.id})"><strong>${t.title}</strong><br><small>📅 ${new Date(t.dueDate).toLocaleDateString('fr-FR')}</small></div>`).join('');
-        }
-        function dragTask(e, id) { e.dataTransfer.setData('text/plain', id); }
-        function allowDrop(e) { e.preventDefault(); }
-        function dropTask(e, status) {
-            e.preventDefault();
-            const id = e.dataTransfer.getData('text/plain');
-            const task = tasks.find(t => t.id == id);
-            if (task) { 
-                task.status = status; 
-                saveData(); 
-                renderTasks();
-                addLog('info', `Tâche "${task.title}" déplacée vers ${status} par ${currentUser?.email || 'anonyme'}`);
-            }
-        }
-        function showAddTaskModal() {
-            if (!currentUser || currentUser.type === 'guest') { 
-                showNotification('Connectez-vous', 'error');
-                addLog('error', 'Tentative d\'ajout de tâche sans connexion');
-                return;
-            }
-            const title = prompt('Titre de la tâche :'); if (!title) return;
-            tasks.push({ id: Date.now(), title, dueDate: new Date().toISOString().split('T')[0], status: 'todo', priority: 'moyenne' });
-            saveData();
-            renderTasks();
-            showNotification('Tâche ajoutée');
-            addLog('success', `Tâche ajoutée: ${title} par ${currentUser.email}`);
-        }
-
-        // ============================================
-        // SUPER ADMIN
-        // ============================================
-        function renderSuperAdmin() {
-            const totalBeneficiaries = domains.reduce((acc, d) => acc + d.beneficiaries.length, 0);
-            document.getElementById('superDomains').textContent = domains.length;
-            document.getElementById('superAdmins').textContent = SUPER_ADMINS.length;
-            document.getElementById('superBeneficiaries').textContent = totalBeneficiaries;
-            document.getElementById('superEmails').textContent = totalBeneficiaries;
-        }
-        function togglePaymentAmount() {
-            const method = document.getElementById('paymentMethod').value;
-            document.getElementById('paymentAmount').style.display = method === 'gratuit' ? 'none' : 'block';
-        }
-        function createDomain() {
-            const name = document.getElementById('newDomainName').value.trim();
-            const quota = document.getElementById('newDomainQuota').value;
-            const adminPassword = document.getElementById('newAdminPassword').value;
-            const method = document.getElementById('paymentMethod').value;
-            const amount = document.getElementById('paymentAmount').value;
-            if (!name || !adminPassword) { 
-                showNotification('Champs requis', 'error');
-                addLog('error', 'Tentative de création de domaine avec champs manquants');
-                return;
-            }
-            if (domains.some(d => d.name === name)) { 
-                showNotification('Domaine existe déjà', 'error');
-                addLog('error', `Tentative de création de domaine existant: ${name}`);
-                return;
-            }
-            domains.push({
-                id: Date.now(),
-                name,
-                adminId: 'admin@' + name,
-                adminPassword,
-                adminName: 'Admin ' + name.split('.')[0],
-                maxEmails: parseInt(quota),
-                paymentMethod: method,
-                paymentAmount: method === 'gratuit' ? 0 : parseInt(amount),
-                paymentDate: new Date().toISOString().split('T')[0],
-                beneficiaries: []
-            });
-            saveData();
-            renderDomainsTable();
-            renderSuperAdmin();
-            showNotification('Domaine créé');
-            addLog('success', `Domaine créé: ${name} (quota: ${quota}, paiement: ${method} ${amount}) par ${currentUser.email}`);
-        }
-        function renderDomainsTable() {
-            const tbody = document.getElementById('domainsTable');
-            if (!tbody) return;
-            let html = '';
-            domains.forEach(d => {
-                let badge = '';
-                if (d.paymentMethod === 'gratuit') badge = '<span style="background:#10b98120;color:#10b981;padding:4px 8px;border-radius:20px;">Gratuit</span>';
-                else if (d.paymentMethod === 'robux') badge = `<span style="background:#ef444420;color:#ef4444;padding:4px 8px;border-radius:20px;">${d.paymentAmount} Robux</span>`;
-                else badge = `<span style="background:#5865f220;color:#5865f2;padding:4px 8px;border-radius:20px;">${d.paymentAmount} Nitro</span>`;
-                html += `<tr><td><strong>${d.name}</strong></td><td>${d.adminId}</td><td>${d.beneficiaries.length}/${d.maxEmails}</td><td>${badge}</td><td>${d.paymentDate}</td><td><button class="btn-icon" onclick="viewDomainDetails('${d.name}')"><i class="fas fa-eye"></i></button><button class="btn-icon" onclick="editDomain('${d.name}')"><i class="fas fa-edit"></i></button><button class="btn-icon" onclick="deleteDomain('${d.name}')"><i class="fas fa-trash"></i></button></td></tr>`;
-            });
-            tbody.innerHTML = html;
-        }
-        window.viewDomainDetails = function(name) {
-            const d = domains.find(d => d.name === name);
-            if (!d) return;
-            alert(`Domaine: ${d.name}\nAdmin: ${d.adminId}\nQuota: ${d.beneficiaries.length}/${d.maxEmails}\nPaiement: ${d.paymentMethod} ${d.paymentAmount ? d.paymentAmount : ''}`);
-            addLog('info', `Détails du domaine consultés: ${name} par ${currentUser?.email || 'anonyme'}`);
-        }
-        window.editDomain = function(name) {
-            const d = domains.find(d => d.name === name);
-            const q = prompt('Nouveau quota:', d.maxEmails);
-            if (q && !isNaN(q)) { 
-                d.maxEmails = parseInt(q); 
-                saveData(); 
-                renderDomainsTable(); 
-                showNotification('Quota mis à jour');
-                addLog('info', `Quota modifié pour ${name}: ${q} par ${currentUser.email}`);
-            }
-        }
-        window.deleteDomain = function(name) {
-            if (confirm('Supprimer ?')) { 
-                domains = domains.filter(d => d.name !== name); 
-                saveData(); 
-                renderDomainsTable(); 
-                renderSuperAdmin(); 
-                showNotification('Domaine supprimé');
-                addLog('warning', `Domaine supprimé: ${name} par ${currentUser.email}`);
-            }
-        }
-
-        // ============================================
-        // ADMIN DOMAINE
-        // ============================================
-        function renderDomainAdmin() {
-            if (!currentUser || !currentUser.domainId) return;
-            const d = domains.find(d => d.id === currentUser.domainId);
-            if (!d) return;
-            document.getElementById('quotaUsed').textContent = d.beneficiaries.length;
-            document.getElementById('quotaMax').textContent = d.maxEmails;
-            document.getElementById('quotaFill').style.width = (d.beneficiaries.length / d.maxEmails * 100) + '%';
-        }
-        function createBeneficiary() {
-            const email = document.getElementById('newBeneficiaryEmail').value.trim();
-            const name = document.getElementById('newBeneficiaryName').value.trim();
-            if (!email || !name) { 
-                showNotification('Champs requis', 'error');
-                addLog('error', 'Tentative d\'ajout de bénéficiaire avec champs manquants');
-                return;
-            }
-            const d = domains.find(d => d.id === currentUser.domainId);
-            if (d.beneficiaries.length >= d.maxEmails) { 
-                showNotification('Quota atteint', 'error');
-                addLog('error', `Tentative d'ajout de bénéficiaire: quota atteint pour ${d.name}`);
-                return;
-            }
-            d.beneficiaries.push({ id: Date.now(), email, password: 'Default123!', name });
-            saveData();
-            renderDomainAdmin();
-            showNotification('Bénéficiaire ajouté');
-            addLog('success', `Bénéficiaire ajouté: ${email} (${name}) dans ${d.name} par ${currentUser.email}`);
-        }
-
-        // ============================================
-        // PARAMÈTRES
-        // ============================================
-        function updateAccountInfo() {
-            if (!currentUser) return;
-            document.getElementById('accountName').textContent = currentUser.name;
-            document.getElementById('accountEmail').textContent = currentUser.email;
-            let role = '';
-            if (currentUser.type === 'guest') role = 'Invité';
-            else if (currentUser.type === 'beneficiary') role = 'Étudiant';
-            else if (currentUser.type === 'domain_admin') role = 'Admin Établissement';
-            else if (currentUser.type === 'super_admin') role = 'Admin Motéo';
-            document.getElementById('accountRole').textContent = role;
-        }
-        function changePassword() { 
-            showNotification('Fonctionnalité à venir', 'info');
-            addLog('info', 'Tentative de changement de mot de passe');
-        }
-
-        // ============================================
-        // DÉCONNEXION
-        // ============================================
-        function logout() {
-            addLog('info', `Déconnexion: ${currentUser?.email || 'anonyme'}`);
-            currentUser = null;
-            document.getElementById('mainApp').style.display = 'none';
-            document.getElementById('landingPage').style.display = 'block';
-            document.getElementById('superAdminNav').style.display = 'none';
-            document.getElementById('domainAdminNav').style.display = 'none';
-            showNotification('Déconnexion réussie');
-        }
-
-        // Raccourcis clavier
-        document.addEventListener('keydown', (e) => {
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-            if (e.key === 'Escape') document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
-        });
+        })();
     </script>
 </body>
 </html>
