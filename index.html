@@ -845,6 +845,102 @@
             color: var(--text-primary);
         }
 
+        /* ===== LOGS ===== */
+        .logs-container {
+            max-height: 400px;
+            overflow-y: auto;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+
+        .log-entry {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-time {
+            color: var(--text-tertiary);
+            min-width: 160px;
+            font-size: 0.75rem;
+        }
+
+        .log-type {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .log-type.success {
+            background: var(--success);
+            color: white;
+        }
+
+        .log-type.error {
+            background: var(--danger);
+            color: white;
+        }
+
+        .log-type.info {
+            background: var(--primary);
+            color: white;
+        }
+
+        .log-type.warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .log-user {
+            color: var(--text-secondary);
+            min-width: 150px;
+            font-weight: 500;
+        }
+
+        .log-message {
+            flex: 1;
+            color: var(--text-primary);
+        }
+
+        .log-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .log-filter {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .log-filter button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-light);
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .log-filter button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
         /* ===== QUOTA ===== */
         .quota-card {
             background: var(--card-bg);
@@ -928,6 +1024,10 @@
             }
             .form-row {
                 flex-direction: column;
+            }
+            .log-entry {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
     </style>
@@ -1055,7 +1155,7 @@
 
         <footer class="landing-footer">
             <p>By © Motémail • Éducation, créé par Yase et Rocket</p>
-            <p class="version">Version Officielle 2.0 - 2026</p>
+            <p class="version">Version Officielle 3.0 - 2026</p>
         </footer>
     </div>
 
@@ -1253,6 +1353,24 @@
                     <div class="kpi-card"><i class="fas fa-users kpi-icon"></i><div><span class="kpi-value" id="superBeneficiaries">0</span><span class="kpi-label">Bénéficiaires</span></div></div>
                     <div class="kpi-card"><i class="fas fa-envelope kpi-icon"></i><div><span class="kpi-value" id="superEmails">0</span><span class="kpi-label">Emails</span></div></div>
                 </div>
+                
+                <!-- SECTION LOGS -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-history"></i> Journal d'activité</h3>
+                    <div class="log-filter">
+                        <button class="active" onclick="filterLogs('all')">Tous</button>
+                        <button onclick="filterLogs('success')">Succès</button>
+                        <button onclick="filterLogs('error')">Erreurs</button>
+                        <button onclick="filterLogs('info')">Infos</button>
+                        <button onclick="filterLogs('warning')">Avertissements</button>
+                        <button onclick="exportLogs()"><i class="fas fa-download"></i> Exporter</button>
+                        <button onclick="clearLogs()"><i class="fas fa-trash"></i> Effacer</button>
+                    </div>
+                    <div class="logs-container" id="logsContainer">
+                        <!-- Les logs seront injectés ici -->
+                    </div>
+                </div>
+
                 <div class="admin-card">
                     <h3>Créer un domaine</h3>
                     <div class="form-row"><input type="text" id="newDomainName" placeholder="ex: ecole.fr" class="form-input"><select id="newDomainQuota" class="form-select"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option><option value="50">50</option></select></div>
@@ -1323,6 +1441,9 @@
             { id: 3, title: 'Lire chapitre 5', dueDate: '2026-03-08', status: 'done', priority: 'basse' }
         ];
 
+        // LOGS
+        let systemLogs = JSON.parse(localStorage.getItem('motemail_logs')) || [];
+
         // Variables globales
         let domains = [];
         let emails = [];
@@ -1331,6 +1452,7 @@
 
         let currentUser = null;
         let currentWeek = 0;
+        let currentLogFilter = 'all';
 
         // ============================================
         // FONCTIONS DE PERSISTANCE
@@ -1340,6 +1462,7 @@
             localStorage.setItem('motemail_emails', JSON.stringify(emails));
             localStorage.setItem('motemail_events', JSON.stringify(events));
             localStorage.setItem('motemail_tasks', JSON.stringify(tasks));
+            localStorage.setItem('motemail_logs', JSON.stringify(systemLogs));
         }
 
         function loadData() {
@@ -1347,6 +1470,76 @@
             emails = JSON.parse(localStorage.getItem('motemail_emails')) || defaultEmails;
             events = JSON.parse(localStorage.getItem('motemail_events')) || defaultEvents;
             tasks = JSON.parse(localStorage.getItem('motemail_tasks')) || defaultTasks;
+        }
+
+        // ============================================
+        // FONCTIONS DE LOGS
+        // ============================================
+        function addLog(type, message, user = null) {
+            const log = {
+                id: Date.now() + Math.random(),
+                timestamp: new Date().toISOString(),
+                type: type, // success, error, info, warning
+                message: message,
+                user: user || (currentUser ? currentUser.email : 'anonyme')
+            };
+            systemLogs.unshift(log);
+            // Garder seulement les 500 derniers logs
+            if (systemLogs.length > 500) systemLogs.pop();
+            saveData();
+            renderLogs();
+        }
+
+        function renderLogs() {
+            const container = document.getElementById('logsContainer');
+            if (!container) return;
+
+            const filtered = systemLogs.filter(log => {
+                if (currentLogFilter === 'all') return true;
+                return log.type === currentLogFilter;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-tertiary);">Aucun log</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(log => `
+                <div class="log-entry">
+                    <span class="log-time">${new Date(log.timestamp).toLocaleString('fr-FR')}</span>
+                    <span class="log-type ${log.type}">${log.type}</span>
+                    <span class="log-user">${log.user}</span>
+                    <span class="log-message">${log.message}</span>
+                </div>
+            `).join('');
+        }
+
+        function filterLogs(type) {
+            currentLogFilter = type;
+            document.querySelectorAll('.log-filter button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderLogs();
+        }
+
+        function exportLogs() {
+            const data = JSON.stringify(systemLogs, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `motemail-logs-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            addLog('info', 'Export des logs effectué');
+        }
+
+        function clearLogs() {
+            if (confirm('Effacer tous les logs ?')) {
+                systemLogs = [];
+                saveData();
+                renderLogs();
+                addLog('info', 'Logs effacés');
+            }
         }
 
         // ============================================
@@ -1363,6 +1556,8 @@
             renderDomainsTable();
             renderAgenda();
             renderTasks();
+            renderLogs();
+            addLog('info', 'Système initialisé');
         });
 
         // ============================================
@@ -1379,6 +1574,7 @@
             if (newTheme === 'dark') { moon.style.display = 'none'; sun.style.display = 'inline-block'; }
             else { moon.style.display = 'inline-block'; sun.style.display = 'none'; }
             showNotification(`Thème ${newTheme === 'dark' ? 'sombre' : 'clair'} activé`);
+            addLog('info', `Thème changé: ${newTheme}`);
         }
 
         // ============================================
@@ -1402,16 +1598,22 @@
         // ============================================
         function handleGuestLogin() {
             const email = document.getElementById('guestEmail').value;
-            if (!email) { showNotification('Email requis', 'error'); return; }
+            if (!email) { 
+                showNotification('Email requis', 'error');
+                addLog('error', 'Tentative de connexion invité échouée: email manquant');
+                return;
+            }
             currentUser = { type: 'guest', email: email, name: email.split('@')[0] };
             closeModal('guest');
             showMainApp();
             showNotification('Bienvenue ' + currentUser.name);
+            addLog('success', `Connexion invité: ${email}`);
         }
 
         function handleBeneficiaryLogin() {
             const email = document.getElementById('beneficiaryEmail').value;
             const pass = document.getElementById('beneficiaryPassword').value;
+            let found = false;
             for (let d of domains) {
                 const b = d.beneficiaries.find(b => b.email === email && b.password === pass);
                 if (b) {
@@ -1419,10 +1621,15 @@
                     closeModal('beneficiary');
                     showMainApp();
                     showNotification('Bienvenue ' + b.name);
+                    addLog('success', `Connexion bénéficiaire: ${email} (domaine: ${d.name})`);
+                    found = true;
                     return;
                 }
             }
-            showNotification('Identifiants incorrects', 'error');
+            if (!found) {
+                showNotification('Identifiants incorrects', 'error');
+                addLog('error', `Tentative de connexion bénéficiaire échouée: ${email}`);
+            }
         }
 
         function handleDomainLogin() {
@@ -1438,7 +1645,11 @@
                 renderDomainAdmin();
                 updateAccountInfo();
                 showNotification('Bienvenue Admin ' + domain.name);
-            } else showNotification('Identifiants incorrects', 'error');
+                addLog('success', `Connexion admin domaine: ${id} (domaine: ${domain.name})`);
+            } else {
+                showNotification('Identifiants incorrects', 'error');
+                addLog('error', `Tentative de connexion admin domaine échouée: ${id}`);
+            }
         }
 
         function handleMoteoLogin() {
@@ -1453,9 +1664,14 @@
                 showSection('super-admin');
                 renderSuperAdmin();
                 renderDomainsTable();
+                renderLogs();
                 updateAccountInfo();
                 showNotification('Bienvenue Super Admin ' + admin.name);
-            } else showNotification('Identifiants incorrects', 'error');
+                addLog('success', `Connexion super admin: ${id}`);
+            } else {
+                showNotification('Identifiants incorrects', 'error');
+                addLog('error', `Tentative de connexion super admin échouée: ${id}`);
+            }
         }
 
         function showMainApp() {
@@ -1478,7 +1694,7 @@
         function showSection(section) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.getElementById(section + '-section').classList.add('active');
-            if (section === 'super-admin') { renderSuperAdmin(); renderDomainsTable(); }
+            if (section === 'super-admin') { renderSuperAdmin(); renderDomainsTable(); renderLogs(); }
             if (section === 'domain-admin') renderDomainAdmin();
             if (section === 'agenda') renderAgenda();
             if (section === 'tasks') renderTasks();
@@ -1511,6 +1727,7 @@
             saveData();
             showNotification('Email envoyé');
             showSection('emails');
+            addLog('success', `Email envoyé de ${currentUser.email} à ${to}`);
         }
 
         // ============================================
@@ -1552,13 +1769,18 @@
         function previousWeek() { currentWeek--; renderAgenda(); }
         function nextWeek() { currentWeek++; renderAgenda(); }
         function showAddEventModal(day, hour) {
-            if (!currentUser || currentUser.type === 'guest') { showNotification('Connectez-vous pour ajouter', 'error'); return; }
+            if (!currentUser || currentUser.type === 'guest') { 
+                showNotification('Connectez-vous pour ajouter', 'error');
+                addLog('error', 'Tentative d\'ajout d\'événement sans connexion');
+                return;
+            }
             const title = prompt('Titre du cours :'); if (!title) return;
             const room = prompt('Salle :'); if (!room) return;
             events.push({ id: Date.now(), title, day, startTime: hour, endTime: (parseInt(hour)+1)+':00', room, color: ['#3b82f6','#8b5cf6','#10b981','#f59e0b'][Math.floor(Math.random()*4)], description: '' });
             saveData();
             renderAgenda();
             showNotification('Cours ajouté');
+            addLog('success', `Cours ajouté: ${title} (${room}) par ${currentUser.email}`);
         }
         function viewEvent(id) {
             const e = events.find(e => e.id === id);
@@ -1583,15 +1805,25 @@
             e.preventDefault();
             const id = e.dataTransfer.getData('text/plain');
             const task = tasks.find(t => t.id == id);
-            if (task) { task.status = status; saveData(); renderTasks(); }
+            if (task) { 
+                task.status = status; 
+                saveData(); 
+                renderTasks();
+                addLog('info', `Tâche "${task.title}" déplacée vers ${status} par ${currentUser?.email || 'anonyme'}`);
+            }
         }
         function showAddTaskModal() {
-            if (!currentUser || currentUser.type === 'guest') { showNotification('Connectez-vous', 'error'); return; }
+            if (!currentUser || currentUser.type === 'guest') { 
+                showNotification('Connectez-vous', 'error');
+                addLog('error', 'Tentative d\'ajout de tâche sans connexion');
+                return;
+            }
             const title = prompt('Titre de la tâche :'); if (!title) return;
             tasks.push({ id: Date.now(), title, dueDate: new Date().toISOString().split('T')[0], status: 'todo', priority: 'moyenne' });
             saveData();
             renderTasks();
             showNotification('Tâche ajoutée');
+            addLog('success', `Tâche ajoutée: ${title} par ${currentUser.email}`);
         }
 
         // ============================================
@@ -1614,8 +1846,16 @@
             const adminPassword = document.getElementById('newAdminPassword').value;
             const method = document.getElementById('paymentMethod').value;
             const amount = document.getElementById('paymentAmount').value;
-            if (!name || !adminPassword) { showNotification('Champs requis', 'error'); return; }
-            if (domains.some(d => d.name === name)) { showNotification('Domaine existe déjà', 'error'); return; }
+            if (!name || !adminPassword) { 
+                showNotification('Champs requis', 'error');
+                addLog('error', 'Tentative de création de domaine avec champs manquants');
+                return;
+            }
+            if (domains.some(d => d.name === name)) { 
+                showNotification('Domaine existe déjà', 'error');
+                addLog('error', `Tentative de création de domaine existant: ${name}`);
+                return;
+            }
             domains.push({
                 id: Date.now(),
                 name,
@@ -1632,6 +1872,7 @@
             renderDomainsTable();
             renderSuperAdmin();
             showNotification('Domaine créé');
+            addLog('success', `Domaine créé: ${name} (quota: ${quota}, paiement: ${method} ${amount}) par ${currentUser.email}`);
         }
         function renderDomainsTable() {
             const tbody = document.getElementById('domainsTable');
@@ -1650,14 +1891,28 @@
             const d = domains.find(d => d.name === name);
             if (!d) return;
             alert(`Domaine: ${d.name}\nAdmin: ${d.adminId}\nQuota: ${d.beneficiaries.length}/${d.maxEmails}\nPaiement: ${d.paymentMethod} ${d.paymentAmount ? d.paymentAmount : ''}`);
+            addLog('info', `Détails du domaine consultés: ${name} par ${currentUser?.email || 'anonyme'}`);
         }
         window.editDomain = function(name) {
             const d = domains.find(d => d.name === name);
             const q = prompt('Nouveau quota:', d.maxEmails);
-            if (q && !isNaN(q)) { d.maxEmails = parseInt(q); saveData(); renderDomainsTable(); showNotification('Quota mis à jour'); }
+            if (q && !isNaN(q)) { 
+                d.maxEmails = parseInt(q); 
+                saveData(); 
+                renderDomainsTable(); 
+                showNotification('Quota mis à jour');
+                addLog('info', `Quota modifié pour ${name}: ${q} par ${currentUser.email}`);
+            }
         }
         window.deleteDomain = function(name) {
-            if (confirm('Supprimer ?')) { domains = domains.filter(d => d.name !== name); saveData(); renderDomainsTable(); renderSuperAdmin(); showNotification('Domaine supprimé'); }
+            if (confirm('Supprimer ?')) { 
+                domains = domains.filter(d => d.name !== name); 
+                saveData(); 
+                renderDomainsTable(); 
+                renderSuperAdmin(); 
+                showNotification('Domaine supprimé');
+                addLog('warning', `Domaine supprimé: ${name} par ${currentUser.email}`);
+            }
         }
 
         // ============================================
@@ -1674,13 +1929,22 @@
         function createBeneficiary() {
             const email = document.getElementById('newBeneficiaryEmail').value.trim();
             const name = document.getElementById('newBeneficiaryName').value.trim();
-            if (!email || !name) { showNotification('Champs requis', 'error'); return; }
+            if (!email || !name) { 
+                showNotification('Champs requis', 'error');
+                addLog('error', 'Tentative d\'ajout de bénéficiaire avec champs manquants');
+                return;
+            }
             const d = domains.find(d => d.id === currentUser.domainId);
-            if (d.beneficiaries.length >= d.maxEmails) { showNotification('Quota atteint', 'error'); return; }
+            if (d.beneficiaries.length >= d.maxEmails) { 
+                showNotification('Quota atteint', 'error');
+                addLog('error', `Tentative d'ajout de bénéficiaire: quota atteint pour ${d.name}`);
+                return;
+            }
             d.beneficiaries.push({ id: Date.now(), email, password: 'Default123!', name });
             saveData();
             renderDomainAdmin();
             showNotification('Bénéficiaire ajouté');
+            addLog('success', `Bénéficiaire ajouté: ${email} (${name}) dans ${d.name} par ${currentUser.email}`);
         }
 
         // ============================================
@@ -1697,12 +1961,16 @@
             else if (currentUser.type === 'super_admin') role = 'Admin Motéo';
             document.getElementById('accountRole').textContent = role;
         }
-        function changePassword() { showNotification('Fonctionnalité à venir', 'info'); }
+        function changePassword() { 
+            showNotification('Fonctionnalité à venir', 'info');
+            addLog('info', 'Tentative de changement de mot de passe');
+        }
 
         // ============================================
         // DÉCONNEXION
         // ============================================
         function logout() {
+            addLog('info', `Déconnexion: ${currentUser?.email || 'anonyme'}`);
             currentUser = null;
             document.getElementById('mainApp').style.display = 'none';
             document.getElementById('landingPage').style.display = 'block';
