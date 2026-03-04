@@ -1155,7 +1155,7 @@
 
         <footer class="landing-footer">
             <p>By © Motémail • Éducation, créé par Yase et Rocket</p>
-            <p class="version">Version Officielle 3.0 - 2026</p>
+            <p class="version">Version Officielle 4.0 - 2026</p>
         </footer>
     </div>
 
@@ -1594,7 +1594,7 @@
         }
 
         // ============================================
-        // CONNEXIONS
+        // CONNEXIONS AVEC LOGS
         // ============================================
         function handleGuestLogin() {
             const email = document.getElementById('guestEmail').value;
@@ -1613,6 +1613,13 @@
         function handleBeneficiaryLogin() {
             const email = document.getElementById('beneficiaryEmail').value;
             const pass = document.getElementById('beneficiaryPassword').value;
+            
+            if (!email || !pass) {
+                showNotification('Email et mot de passe requis', 'error');
+                addLog('error', `Tentative de connexion bénéficiaire échouée: champs manquants`);
+                return;
+            }
+            
             let found = false;
             for (let d of domains) {
                 const b = d.beneficiaries.find(b => b.email === email && b.password === pass);
@@ -1635,6 +1642,13 @@
         function handleDomainLogin() {
             const id = document.getElementById('domainAdminId').value;
             const pass = document.getElementById('domainAdminPassword').value;
+            
+            if (!id || !pass) {
+                showNotification('Identifiant et mot de passe requis', 'error');
+                addLog('error', `Tentative de connexion admin domaine échouée: champs manquants`);
+                return;
+            }
+            
             const domain = domains.find(d => d.adminId === id && d.adminPassword === pass);
             if (domain) {
                 currentUser = { type: 'domain_admin', email: id, name: domain.adminName, domain: domain.name, domainId: domain.id, maxEmails: domain.maxEmails, beneficiaries: domain.beneficiaries };
@@ -1655,6 +1669,13 @@
         function handleMoteoLogin() {
             const id = document.getElementById('moteoAdminId').value;
             const pass = document.getElementById('moteoAdminPassword').value;
+            
+            if (!id || !pass) {
+                showNotification('Identifiant et mot de passe requis', 'error');
+                addLog('error', `Tentative de connexion super admin échouée: champs manquants`);
+                return;
+            }
+            
             const admin = SUPER_ADMINS.find(a => a.id === id && a.password === pass);
             if (admin) {
                 currentUser = { type: 'super_admin', email: admin.id, name: admin.name };
@@ -1722,7 +1743,11 @@
         function showCompose() { showSection('compose'); document.getElementById('composeFrom').value = currentUser.email; }
         function handleSendEmail() {
             const to = document.getElementById('composeTo').value;
-            if (!to) { showNotification('Destinataire requis', 'error'); return; }
+            if (!to) { 
+                showNotification('Destinataire requis', 'error');
+                addLog('error', `Tentative d'envoi d'email sans destinataire par ${currentUser.email}`);
+                return;
+            }
             emails.unshift({ id: Date.now(), from: currentUser.email, to, subject: document.getElementById('composeSubject').value || '(Pas de sujet)', body: document.getElementById('composeBody').value || '(Message vide)', date: new Date().toISOString(), read: false });
             saveData();
             showNotification('Email envoyé');
